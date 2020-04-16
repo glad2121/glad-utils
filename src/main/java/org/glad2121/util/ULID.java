@@ -19,6 +19,11 @@ import java.util.UUID;
 public final class ULID implements Serializable, Comparable<ULID> {
 
     /**
+     * タイムスタンプが上限を超えたか判定するためのマスク。
+     */
+    static final long TIMESTAMP_OVERFLOW_MASK = 0xFFFF_0000_0000_0000L;
+
+    /**
      * serialVersionUID
      */
     private static final long serialVersionUID = 1L;
@@ -74,28 +79,6 @@ public final class ULID implements Serializable, Comparable<ULID> {
     }
 
     /**
-     * 指定されたビット列から ULID へ変換します。
-     *
-     * @param data ビット列
-     * @return ULID
-     */
-    public static ULID from(byte[] data) {
-        Objects.requireNonNull(data, "data must not be null");
-        if (data.length != 16) {
-            throw new IllegalArgumentException("data must be 16 bytes");
-        }
-        long mostSigBits = 0;
-        long leastSigBits = 0;
-        for (int i = 0; i < 8; ++i) {
-            mostSigBits = (mostSigBits << 8) | (data[i] & 0xFF);
-        }
-        for (int i = 8; i < 16; ++i) {
-            leastSigBits = (leastSigBits << 8) | (data[i] & 0xFF);
-        }
-        return new ULID(mostSigBits, leastSigBits);
-    }
-
-    /**
      * 指定された ULID 表現の文字列から ULID へ変換します。
      *
      * @param ulid ULID 表現の文字列
@@ -111,6 +94,52 @@ public final class ULID implements Serializable, Comparable<ULID> {
         long part2 = NumberUtils.parseLong(ulid.substring(18), 32);
         long mostSigBits = (timestamp << 16) | (part1 >>> 24);
         long leastSigBits = (part1 << 40) | part2;
+        return new ULID(mostSigBits, leastSigBits);
+    }
+
+    /**
+     * 指定されたビット列から ULID へ変換します。
+     *
+     * @param data ビット列
+     * @return ULID
+     */
+    public static ULID from(byte[] data) {
+        Objects.requireNonNull(data, "data must not be null");
+        if (data.length != 16) {
+            throw new IllegalArgumentException("data must be 16 bytes");
+        }
+        long mostSigBits = 0;
+        for (int i = 0; i < 8; ++i) {
+            mostSigBits = (mostSigBits << 8) | (data[i] & 0xFF);
+        }
+        long leastSigBits = 0;
+        for (int i = 8; i < 16; ++i) {
+            leastSigBits = (leastSigBits << 8) | (data[i] & 0xFF);
+        }
+        return new ULID(mostSigBits, leastSigBits);
+    }
+
+    /**
+     * 指定されたタイムスタンプとエントロピーから ULID へ変換します。
+     *
+     * @param timestamp タイムスタンプ
+     * @param entropy エントロピー
+     * @return ULID
+     */
+    public static ULID from(long timestamp, byte[] entropy) {
+        checkTimestamp(timestamp);
+        Objects.requireNonNull(entropy, "entropy must not be null");
+        if (entropy.length != 10) {
+            throw new IllegalArgumentException("entropy must be 10 bytes");
+        }
+        long mostSigBits = timestamp;
+        for (int i = 0; i < 2; ++i) {
+            mostSigBits = (mostSigBits << 8) | (entropy[i] & 0xFF);
+        }
+        long leastSigBits = 0;
+        for (int i = 2; i < 10; ++i) {
+            leastSigBits = (leastSigBits << 8) | (entropy[i] & 0xFF);
+        }
         return new ULID(mostSigBits, leastSigBits);
     }
 
@@ -142,12 +171,45 @@ public final class ULID implements Serializable, Comparable<ULID> {
     }
 
     /**
+     * この ULID に関連したエントロピーを返します。
+     *
+     * @return エントロピー
+     */
+    public byte[] entropy() {
+        byte[] result = new byte[10];
+        long msb = mostSigBits;
+        for (int i = 1; i >= 0; --i) {
+            result[i] = (byte) (msb & 0xFF);
+            msb >>= 8;
+        }
+        long lsb = leastSigBits;
+        for (int i = 9; i >= 2; --i) {
+            result[i] = (byte) (lsb & 0xFF);
+            lsb >>= 8;
+        }
+        return result;
+    }
+
+    /**
      * この ULID のビット列から UUID へ変換します。
      *
      * @return UUID
      */
     public UUID toUUID() {
         return new UUID(mostSigBits, leastSigBits);
+    }
+
+    /**
+     * この ULID の文字列表現を返します。
+     */
+    @Override
+    public String toString() {
+        char[] buf = new char[26];
+        NumberUtils.toCrockford32(timestamp(), buf, 0, 10);
+        long value = ((mostSigBits & 0xFFFFL) << 24) | (leastSigBits >>> 40);
+        NumberUtils.toCrockford32(value, buf, 10, 8);
+        NumberUtils.toCrockford32(leastSigBits, buf, 18, 8);
+        return new String(buf);
     }
 
     /**
@@ -168,19 +230,6 @@ public final class ULID implements Serializable, Comparable<ULID> {
             lsb >>= 8;
         }
         return result;
-    }
-
-    /**
-     * この ULID の文字列表現を返します。
-     */
-    @Override
-    public String toString() {
-        char[] buf = new char[26];
-        NumberUtils.toCrockford32(timestamp(), buf, 0, 10);
-        long value = ((mostSigBits & 0xFFFFL) << 24) | (leastSigBits >>> 40);
-        NumberUtils.toCrockford32(value, buf, 10, 8);
-        NumberUtils.toCrockford32(leastSigBits, buf, 18, 8);
-        return new String(buf);
     }
 
     /**
@@ -217,6 +266,17 @@ public final class ULID implements Serializable, Comparable<ULID> {
     }
 
     /**
+     * タイムスタンプが範囲内かチェックします。
+     *
+     * @param timestamp タイムスタンプ
+     */
+    static void checkTimestamp(long timestamp) {
+        if ((timestamp & TIMESTAMP_OVERFLOW_MASK) != 0) {
+            throw new IllegalArgumentException("Unsupport timestamp: " + timestamp);
+        }
+    }
+
+    /**
      * ULID のジェネレータ。
      *
      * @author glad2121
@@ -224,14 +284,9 @@ public final class ULID implements Serializable, Comparable<ULID> {
     public static abstract class Generator {
 
         /**
-         * タイムスタンプが上限を超えたか判定するためのマスク。
-         */
-        static final long TIMESTAMP_OVERFLOW_MASK = 0xFFFF_0000_0000_0000L;
-
-        /**
          * タイムスタンプを取得する {@code Clock}。
          */
-        protected final Clock clock;
+        final Clock clock;
 
         /**
          * ランダム値を生成する {@code Random} オブジェクト。
@@ -266,14 +321,14 @@ public final class ULID implements Serializable, Comparable<ULID> {
         public abstract ULID nextULID();
 
         /**
-         * タイムスタンプが範囲内かチェックします。
+         * タイムスタンプを返します。
          *
-         * @param timestamp タイムスタンプ
+         * @return タイムスタンプ
          */
-        protected void checkTimestamp(long timestamp) {
-            if ((timestamp & TIMESTAMP_OVERFLOW_MASK) != 0) {
-                throw new IllegalArgumentException("Unsupport timestamp: " + timestamp);
-            }
+        protected long timestamp() {
+            long timestamp = clock.millis();
+            checkTimestamp(timestamp);
+            return timestamp;
         }
 
     }
@@ -311,88 +366,8 @@ public final class ULID implements Serializable, Comparable<ULID> {
          */
         @Override
         public ULID nextULID() {
-            long timestamp = clock.millis();
-            checkTimestamp(timestamp);
-            long mostSigBits = (timestamp << 16) | (random.nextInt() & 0xFFFF);
+            long mostSigBits = (timestamp() << 16) | (random.nextInt() & 0xFFFF);
             long leastSigBits = random.nextLong();
-            return new ULID(mostSigBits, leastSigBits);
-        }
-
-    }
-
-    /**
-     * Huxi の {@code nextValue} と同等ロジックのジェネレータ。
-     *
-     * @author glad2121
-     * @see https://github.com/huxi/sulky/tree/master/sulky-ulid
-     */
-    static class HuxiNextValueGenerator extends Generator {
-
-        /**
-         * システムクロックと {@code SecureRandom} を用いたコンストラクタ。
-         */
-        public HuxiNextValueGenerator() {
-        }
-
-        /**
-         * 指定された {@code Clock} と {@code Random} を用いたコンストラクタ。
-         *
-         * @param clock {@code Clock}
-         * @param random {@code Random}
-         */
-        public HuxiNextValueGenerator(Clock clock, Random random) {
-            super(clock, random);
-        }
-
-        /**
-         * 次の ULID を生成します。
-         */
-        @Override
-        public ULID nextULID() {
-            long timestamp = clock.millis();
-            checkTimestamp(timestamp);
-            long mostSigBits = (timestamp << 16) | (random.nextLong() & 0xFFFF);
-            long leastSigBits = random.nextLong();
-            return new ULID(mostSigBits, leastSigBits);
-        }
-
-    }
-
-    /**
-     * Huxi の {@code nextULID} と同等ロジックのジェネレータ。
-     *
-     * @author glad2121
-     * @see https://github.com/huxi/sulky/tree/master/sulky-ulid
-     */
-    static class HuxiNextULIDGenerator extends Generator {
-
-        /**
-         * システムクロックと {@code SecureRandom} を用いたコンストラクタ。
-         */
-        public HuxiNextULIDGenerator() {
-        }
-
-        /**
-         * 指定された {@code Clock} と {@code Random} を用いたコンストラクタ。
-         *
-         * @param clock {@code Clock}
-         * @param random {@code Random}
-         */
-        public HuxiNextULIDGenerator(Clock clock, Random random) {
-            super(clock, random);
-        }
-
-        /**
-         * 次の ULID を生成します。
-         */
-        @Override
-        public ULID nextULID() {
-            long timestamp = clock.millis();
-            checkTimestamp(timestamp);
-            long part1 = random.nextLong();
-            long part2 = random.nextLong();
-            long mostSigBits = (timestamp << 16) | ((part1 >>> 24) & 0xFFFFL);
-            long leastSigBits = (part1 << 40) | (part2 & 0xFF_FFFF_FFFFL);
             return new ULID(mostSigBits, leastSigBits);
         }
 

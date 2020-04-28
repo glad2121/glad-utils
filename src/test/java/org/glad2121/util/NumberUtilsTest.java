@@ -4,8 +4,12 @@ import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+/**
+ * {@link NumberUtils} の単体テスト。
+ */
 class NumberUtilsTest {
 
     @BeforeEach
@@ -17,6 +21,7 @@ class NumberUtilsTest {
     }
 
     @Test
+    @DisplayName("int から12進数へ正しく変換できること。")
     void testIntToString12() {
         assertThat(NumberUtils.toString(0, 12)).isEqualTo("0");
         assertThat(NumberUtils.toString(11, 12)).isEqualTo("B");
@@ -28,6 +33,7 @@ class NumberUtilsTest {
     }
 
     @Test
+    @DisplayName("int からの変換で基数が範囲外の場合、例外がスローされること。")
     void testIntToStringError() {
         assertThatThrownBy(() -> NumberUtils.toString(0, 1))
             .isInstanceOf(NumberFormatException.class);
@@ -36,6 +42,7 @@ class NumberUtilsTest {
     }
 
     @Test
+    @DisplayName("long から12進数へ正しく変換できること。")
     void testLongToString12() {
         assertThat(NumberUtils.toString(0L, 12)).isEqualTo("0");
         assertThat(NumberUtils.toString(11L, 12)).isEqualTo("B");
@@ -47,6 +54,7 @@ class NumberUtilsTest {
     }
 
     @Test
+    @DisplayName("long からの変換で基数が範囲外の場合、例外がスローされること。")
     void testLongToStringError() {
         assertThatThrownBy(() -> NumberUtils.toString(0L, 1))
             .isInstanceOf(NumberFormatException.class);
@@ -55,6 +63,7 @@ class NumberUtilsTest {
     }
 
     @Test
+    @DisplayName("int から16進数へ正しく変換できること。")
     void testIntToHexString() {
         assertThat(NumberUtils.toHexString(0, 0)).isEqualTo("0");
         assertThat(NumberUtils.toHexString(0, 4)).isEqualTo("0000");
@@ -74,6 +83,7 @@ class NumberUtilsTest {
     }
 
     @Test
+    @DisplayName("long から16進数へ正しく変換できること。")
     void testLongToHexString() {
         assertThat(NumberUtils.toHexString(0L, 0)).isEqualTo("0");
         assertThat(NumberUtils.toHexString(0L, 4)).isEqualTo("0000");
@@ -93,6 +103,7 @@ class NumberUtilsTest {
     }
 
     @Test
+    @DisplayName("int から32進数へ正しく変換できること。")
     void testIntToCrockford32() {
         assertThat(NumberUtils.toCrockford32(0, 0)).isEqualTo("0");
         assertThat(NumberUtils.toCrockford32(0, 4)).isEqualTo("0000");
@@ -112,6 +123,7 @@ class NumberUtilsTest {
     }
 
     @Test
+    @DisplayName("long から32進数へ正しく変換できること。")
     void testLongToCrockford32() {
         assertThat(NumberUtils.toCrockford32(0L, 0)).isEqualTo("0");
         assertThat(NumberUtils.toCrockford32(0L, 4)).isEqualTo("0000");
@@ -131,6 +143,7 @@ class NumberUtilsTest {
     }
 
     @Test
+    @DisplayName("16進数から int へ正しく解析できること。")
     void testParseInt16() {
         assertThat(NumberUtils.parseInt("0", 16)).isEqualTo(0);
         assertThat(NumberUtils.parseInt("1", 16)).isEqualTo(1);
@@ -143,6 +156,7 @@ class NumberUtilsTest {
     }
 
     @Test
+    @DisplayName("32進数から int へ正しく解析できること。")
     void testParseInt32() {
         assertThat(NumberUtils.parseInt("0", 32)).isEqualTo(0);
         assertThat(NumberUtils.parseInt("1", 32)).isEqualTo(1);
@@ -155,6 +169,7 @@ class NumberUtilsTest {
     }
 
     @Test
+    @DisplayName("int への解析でエラーが発生する場合。")
     void testParseIntError() {
         assertThatThrownBy(() -> NumberUtils.parseInt(null, 10))
             .isInstanceOf(NumberFormatException.class);
@@ -169,6 +184,7 @@ class NumberUtilsTest {
     }
 
     @Test
+    @DisplayName("16進数から long へ正しく解析できること。")
     void testParseLong16() {
         assertThat(NumberUtils.parseLong("0", 16)).isEqualTo(0L);
         assertThat(NumberUtils.parseLong("1", 16)).isEqualTo(1L);
@@ -181,6 +197,7 @@ class NumberUtilsTest {
     }
 
     @Test
+    @DisplayName("32進数から long へ正しく解析できること。")
     void testParseLong32() {
         assertThat(NumberUtils.parseLong("0", 32)).isEqualTo(0L);
         assertThat(NumberUtils.parseLong("1", 32)).isEqualTo(1L);
@@ -193,6 +210,7 @@ class NumberUtilsTest {
     }
 
     @Test
+    @DisplayName("long への解析でエラーが発生する場合。")
     void testParseLongError() {
         assertThatThrownBy(() -> NumberUtils.parseLong(null, 10))
             .isInstanceOf(NumberFormatException.class);
@@ -207,6 +225,7 @@ class NumberUtilsTest {
     }
 
     @Test
+    @DisplayName("文字から数字へ正しく変換できること。")
     void testCharToNum() {
         assertThat(NumberUtils.charToNum('0')).isEqualTo(0);
         assertThat(NumberUtils.charToNum('9')).isEqualTo(9);

@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
  *
  * @author glad2121
  */
-public class NumberUtils {
+public final class NumberUtils {
 
     /**
      * 数値から文字への変換表。
@@ -40,7 +40,7 @@ public class NumberUtils {
     /**
      * 使用しないコンストラクタ。
      */
-    protected NumberUtils() {
+    private NumberUtils() {
     }
 
     /**

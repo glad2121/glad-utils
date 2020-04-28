@@ -6,16 +6,20 @@ import java.security.SecureRandom;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Random;
 import java.util.UUID;
 
+import org.glad2121.test.GradualClock;
 import org.glad2121.util.ULID.Generator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+/**
+ * {@link ULID} の単体テスト。
+ */
 class ULIDTest {
 
     static final Instant START_TIME =
@@ -30,7 +34,9 @@ class ULIDTest {
     }
 
     @Test
+    @DisplayName("nextULID() の動作確認。")
     void testNextULID() {
+        // クロックと乱数を固定。
         ULID.Generator gen = new ULID.DefaultGenerator(new TestClock(), new Random(0L));
         assertThat(ULID.nextULID(gen)).hasToString("01DZ86TBVBPHGD9PAH70YS7JVT");
         assertThat(ULID.nextULID(gen)).hasToString("01DZ86TBVCE2ZA6BE9YS7HVW1T");
@@ -46,6 +52,7 @@ class ULIDTest {
     }
 
     @Test
+    @DisplayName("上位ビット・下位ビットによる生成と取得のテスト。")
     void testFromAndGetSigBits() {
         long mostSigBits = 0x0123456789ABCDEFL;
         long leastSigBits = 0x123456789ABCDEF0L;
@@ -55,6 +62,7 @@ class ULIDTest {
     }
 
     @Test
+    @DisplayName("取得した上位ビット・下位ビットから元の ULID が復元できること。")
     void testGetAndFromSigBits() {
         ULID ulid = ULID.nextULID();
         long mostSigBits = ulid.getMostSignificantBits();
@@ -63,6 +71,7 @@ class ULIDTest {
     }
 
     @Test
+    @DisplayName("UUID から ULID を生成し、元の UUID に変換できること。")
     void testFromAndToUUID() {
         UUID uuid = new UUID(0x0123456789ABCDEFL, 0x123456789ABCDEF0L);
         ULID ulid = ULID.from(uuid);
@@ -70,6 +79,7 @@ class ULIDTest {
     }
 
     @Test
+    @DisplayName("変換した UUID から元の ULID が復元できること。")
     void testToAndFromUUID() {
         ULID ulid = ULID.nextULID();
         //System.out.println(ulid);
@@ -78,6 +88,7 @@ class ULIDTest {
     }
 
     @Test
+    @DisplayName("文字列から ULID を生成し、元の文字列に変換できること。")
     void testFromAndToString() {
         String text = "0123456789ABCDEFGHJKMNPQRS";
         ULID ulid = ULID.from(text);
@@ -85,6 +96,7 @@ class ULIDTest {
     }
 
     @Test
+    @DisplayName("変換した文字列から元の ULID が復元できること。")
     void testToAndFromString() {
         ULID ulid = ULID.nextULID();
         //System.out.println(ulid);
@@ -93,6 +105,7 @@ class ULIDTest {
     }
 
     @Test
+    @DisplayName("バイト列から ULID を生成し、元のバイト列に変換できること。")
     void testFromAndToBytes() {
         byte[] data = {
             0x01, 0x12, 0x23, 0x34,
@@ -105,6 +118,7 @@ class ULIDTest {
     }
 
     @Test
+    @DisplayName("変換したバイト列から元の ULID が復元できること。")
     void testToAndFromBytes() {
         ULID ulid = ULID.nextULID();
         //System.out.println(ulid);
@@ -113,6 +127,7 @@ class ULIDTest {
     }
 
     @Test
+    @DisplayName("タイムスタンプとエントロピーによる生成と取得のテスト。")
     void testFromAndGetTimestampEntropy() {
         long timestamp = 0x123456789ABCL;
         byte[] entropy = {
@@ -125,6 +140,7 @@ class ULIDTest {
     }
 
     @Test
+    @DisplayName("取得したタイムスタンプとエントロピーから元の ULID が復元できること。")
     void testGetAndFromTimestampEntropy() {
         ULID ulid = ULID.nextULID();
         //System.out.println(ulid);
@@ -134,6 +150,7 @@ class ULIDTest {
     }
 
     @Test
+    @DisplayName("生成した ULID が時系列にソート可能なこと。")
     void testComparable() {
         ULID.Generator gen = new ULID.DefaultGenerator(new TestClock(), new SecureRandom());
         ULID ulid = ULID.nextULID(gen);
@@ -149,6 +166,7 @@ class ULIDTest {
     }
 
     @Test
+    @DisplayName("huxi による実装の nextValue() と同じ結果を返すテスト。")
     void testHuxiNextValue() {
         ULID.Generator gen = new HuxiNextValueGenerator(new TestClock(), new Random(0L));
         long timestamp = START_TIME.toEpochMilli();
@@ -172,6 +190,7 @@ class ULIDTest {
     }
 
     @Test
+    @DisplayName("huxi による実装の nextULID() と同じ結果を返すテスト。")
     void testHuxiNextULID() {
         ULID.Generator gen = new HuxiNextULIDGenerator(new TestClock(), new Random(0L));
         long timestamp = START_TIME.toEpochMilli();
@@ -195,6 +214,7 @@ class ULIDTest {
     }
 
     @Test
+    @DisplayName("huxi による実装の parseULID() と toString() の動作確認。")
     void testHuxiParseAndToString() {
         String text = "0123456789ABCDEFGHJKMNPQRS";
         var value = de.huxhorn.sulky.ulid.ULID.parseULID(text);
@@ -202,6 +222,7 @@ class ULIDTest {
     }
 
     @Test
+    @DisplayName("azam による実装と同じ結果を返すテスト。")
     void testAzam() {
         ULID.Generator gen = new AzamGenerator(new TestClock(), new Random(0L));
         long timestamp = START_TIME.toEpochMilli();
@@ -230,6 +251,7 @@ class ULIDTest {
     }
 
     @Test
+    @DisplayName("azam による実装のタイムスタンプとエントロピーの動作確認。")
     void testAzamGetAndGenerate() {
         //String text = "0123456789ABCDEFGHJKMNPQRS";
         String text = "0123456789ABCD0FGHJKMN0QRS";
@@ -238,25 +260,13 @@ class ULIDTest {
         assertThat(io.azam.ulidj.ULID.generate(timestamp, entropy)).isEqualTo(text);
     }
 
-    static class TestClock extends Clock {
+    /**
+     * テスト用のクロック。
+     */
+    static class TestClock extends GradualClock {
 
-        Instant instant = START_TIME;
-
-        @Override
-        public ZoneId getZone() {
-            return ZoneOffset.UTC;
-        }
-
-        @Override
-        public Clock withZone(ZoneId zone) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Instant instant() {
-            Instant current = instant;
-            instant = instant.plusMillis(1L);
-            return current;
+        public TestClock() {
+            super(START_TIME, 1L, ZoneOffset.UTC);
         }
 
     }

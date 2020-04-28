@@ -348,7 +348,7 @@ public final class ULID implements Serializable, Comparable<ULID> {
         /**
          * システムクロックと {@code SecureRandom} を用いたコンストラクタ。
          */
-        public DefaultGenerator() {
+        DefaultGenerator() {
         }
 
         /**

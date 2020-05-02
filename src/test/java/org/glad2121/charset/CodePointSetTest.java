@@ -1,4 +1,4 @@
-package org.glad2121.util;
+package org.glad2121.charset;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import org.glad2121.util.CodePointSet.CodeType;
+import org.glad2121.charset.CodePointSet.CodeType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +29,7 @@ class CodePointSetTest {
     @DisplayName("コードポイントの個数のチェック。")
     void testCount() {
         // 制御文字33字は利用可能文字に含めない。
-        assertThat(CodePointSet.INSTANCE.count(CodeType.CONTROL_CHAR)).isEqualTo(0);
+        assertThat(CodePointSet.INSTANCE.count(CodeType.UNKNOWN)).isEqualTo(0);
         // US-ASCII 128字から、制御文字33字を除いたもの。
         assertThat(CodePointSet.INSTANCE.count(CodeType.US_ASCII)).isEqualTo(95);
         // 半角カナ63字と、円記号、上線。

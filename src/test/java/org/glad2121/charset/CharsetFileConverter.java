@@ -1,4 +1,4 @@
-package org.glad2121.util;
+package org.glad2121.charset;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -20,7 +20,7 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.glad2121.util.CodePointSet.CodeType;
+import org.glad2121.charset.CodePointSet.CodeType;
 
 /**
  * 文字集合の設定ファイルをコンパクト化するコンバータ。
@@ -57,7 +57,7 @@ class CharsetFileConverter {
     void convert() {
         CodePointSet set = loadFromCharsetText(SOURCE_NAME);
 
-        assertThat(set.count(CodeType.CONTROL_CHAR)).isEqualTo(0);
+        assertThat(set.count(CodeType.UNKNOWN)).isEqualTo(0);
         assertThat(set.count(CodeType.US_ASCII)).isEqualTo(95);
         assertThat(set.count(CodeType.JIS_X_0201)).isEqualTo(65);
         assertThat(set.count(CodeType.JIS_X_0208)).isEqualTo(6886);

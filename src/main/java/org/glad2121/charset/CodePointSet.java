@@ -1,4 +1,4 @@
-package org.glad2121.util;
+package org.glad2121.charset;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,10 +6,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.glad2121.util.StringUtils;
 
 /**
  * コードポイントの集合。
@@ -129,7 +131,7 @@ class CodePointSet {
             if (in == null) {
                 throw new RuntimeException("Resource not found: " + name);
             }
-            Map<Integer, CodeType> map = new TreeMap<>();
+            Map<Integer, CodeType> map = new HashMap<>();
             Pattern p = Pattern.compile(
                     "(\\d),\\\\u([0-9A-F]+)(?:-\\\\u([0-9A-F]+)|\\\\u([0-9A-F]+))?");
             BufferedReader reader = new BufferedReader(
@@ -168,9 +170,9 @@ class CodePointSet {
     enum CodeType {
 
         /**
-         * 0: 制御文字。
+         * 0: 未設定。
          */
-        CONTROL_CHAR,
+        UNKNOWN,
 
         /**
          * 1: US-ASCII (制御文字を覗く)。

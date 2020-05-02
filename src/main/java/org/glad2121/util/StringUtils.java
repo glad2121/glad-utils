@@ -43,7 +43,7 @@ public final class StringUtils {
      * @param codePoints コードポイントの配列
      * @return 文字列
      */
-    static String codePointsToString(int... codePoints) {
+    public static String codePointsToString(int... codePoints) {
         return new String(codePoints, 0, codePoints.length);
     }
 
@@ -55,7 +55,7 @@ public final class StringUtils {
      * @param f 変換関数
      * @return 変換後の文字列
      */
-    static String replaceAll(CharSequence s, Pattern p, Function<String, String> f) {
+    public static String replaceAll(CharSequence s, Pattern p, Function<String, String> f) {
         if (s == null || "".equals(s)) {
             return (String) s;
         }

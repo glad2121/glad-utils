@@ -1,10 +1,12 @@
-package org.glad2121.util;
+package org.glad2121.charset;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import org.glad2121.util.NumberUtils;
+import org.glad2121.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,4 +1,4 @@
-package org.glad2121.util;
+package org.glad2121.charset;
 
 import static org.assertj.core.api.Assertions.*;
 

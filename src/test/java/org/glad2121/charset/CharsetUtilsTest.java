@@ -1,7 +1,7 @@
-package org.glad2121.util;
+package org.glad2121.charset;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.glad2121.util.CharsetUtils.*;
+import static org.glad2121.charset.CharsetUtils.*;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -175,7 +175,8 @@ class CharsetUtilsTest {
         assertThat(isAvailable("①②③④⑤⑥⑦⑧⑨⑩ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ")).isTrue();
 
         // IBM拡張漢字。
-        assertThat(isAvailable("仼僴凬﨎坙峵悅愠敎昻晴櫢淸淲皂益礼靖精羽蠇赶﨣逸﨧﨨閒﨩靑飯飼館髙鶴")).isTrue();
+        assertThat(isAvailable("仼僴凬﨎坙峵悅愠敎昻晴櫢淸淲皂益礼靖精羽")).isTrue();
+        assertThat(isAvailable("蠇赶﨣逸﨧﨨閒﨩靑飯飼館髙鶴")).isTrue();
 
         // 第3水準漢字。
         assertThat(isAvailable("俱𠀋㐂丯丰亍份仿伋你佈佉佟佪佬佾侗侮俠倁")).isTrue();

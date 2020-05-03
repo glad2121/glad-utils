@@ -4,6 +4,10 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.regex.Pattern;
 
@@ -16,6 +20,11 @@ import org.glad2121.util.StringUtils;
  * @author glad2121
  */
 public final class CharsetUtils {
+
+    /**
+     * UTF-8
+     */
+    public static final Charset UTF_8 = StandardCharsets.UTF_8;
 
     /**
      * ISO-2022-JP
@@ -239,6 +248,29 @@ public final class CharsetUtils {
     }
 
     /**
+     * 文字列を構成する文字がすべて ASCII か判定します。
+     *
+     * @param s 文字列
+     * @return すべて ASCII ならば {@code true}
+     */
+    public static boolean isAscii(CharSequence s) {
+        if (StringUtils.isEmpty(s)) {
+            return true;
+        }
+        return s.chars().allMatch(CharsetUtils::isAscii);
+    }
+
+    /**
+     * 指定されたコードポイントが ASCII か判定します。
+     *
+     * @param codePoint コードポイント
+     * @return ASCII ならば {@code true}
+     */
+    static boolean isAscii(int codePoint) {
+        return CodePointSet.INSTANCE.contains(codePoint, CodeType.US_ASCII);
+    }
+
+    /**
      * 文字列を構成する文字がすべて半角カタカナか判定します。
      *
      * @param s 文字列
@@ -262,6 +294,36 @@ public final class CharsetUtils {
             return true;
         }
         return HALFWIDTH_KANA_PATTERN.matcher(s).matches();
+    }
+
+    /**
+     * 文字列を構成する文字がすべて JIS X 0201 か判定します。
+     * <p>
+     * 以下の文字が該当します。
+     * <ul>
+     *   <li>US-ASCII</li>
+     *   <li>JIS X 0201 (半角カナ)</li>
+     * </ul>
+     *
+     * @param s 文字列
+     * @return すべて JIS X 0201 ならば {@code true}
+     */
+    static boolean isJisX0201(CharSequence s) {
+        if (StringUtils.isEmpty(s)) {
+            return true;
+        }
+        return s.chars().allMatch(CharsetUtils::isJisX0201);
+    }
+
+    /**
+     * 指定されたコードポイントが JIS X 0201 か判定します。
+     *
+     * @param codePoint コードポイント
+     * @return JIS X 0201 ならば {@code true}
+     */
+    static boolean isJisX0201(int codePoint) {
+        return CodePointSet.INSTANCE.contains(codePoint,
+                CodeType.US_ASCII, CodeType.JIS_X_0201);
     }
 
     /**
@@ -330,7 +392,7 @@ public final class CharsetUtils {
      * @return 全角英小文字ならば {@code true}
      */
     static boolean isFullwidthLower(int codePoint) {
-        return ('a' <= codePoint) && (codePoint <= 'ｚ');
+        return ('ａ' <= codePoint) && (codePoint <= 'ｚ');
     }
 
     /**
@@ -413,59 +475,6 @@ public final class CharsetUtils {
             return true;
         }
         return FULLWIDTH_HIRAGANA_PATTERN.matcher(s).matches();
-    }
-
-    /**
-     * 文字列を構成する文字がすべて ASCII か判定します。
-     *
-     * @param s 文字列
-     * @return すべて ASCII ならば {@code true}
-     */
-    public static boolean isAscii(CharSequence s) {
-        if (StringUtils.isEmpty(s)) {
-            return true;
-        }
-        return s.chars().allMatch(CharsetUtils::isAscii);
-    }
-
-    /**
-     * 指定されたコードポイントが ASCII か判定します。
-     *
-     * @param codePoint コードポイント
-     * @return ASCII ならば {@code true}
-     */
-    static boolean isAscii(int codePoint) {
-        return CodePointSet.INSTANCE.contains(codePoint, CodeType.US_ASCII);
-    }
-
-    /**
-     * 文字列を構成する文字がすべて JIS X 0201 か判定します。
-     * <p>
-     * 以下の文字が該当します。
-     * <ul>
-     *   <li>US-ASCII</li>
-     *   <li>JIS X 0201 (半角カナ)</li>
-     * </ul>
-     *
-     * @param s 文字列
-     * @return すべて JIS X 0201 ならば {@code true}
-     */
-    static boolean isJisX0201(CharSequence s) {
-        if (StringUtils.isEmpty(s)) {
-            return true;
-        }
-        return s.chars().allMatch(CharsetUtils::isJisX0201);
-    }
-
-    /**
-     * 指定されたコードポイントが JIS X 0201 か判定します。
-     *
-     * @param codePoint コードポイント
-     * @return JIS X 0201 ならば {@code true}
-     */
-    static boolean isJisX0201(int codePoint) {
-        return CodePointSet.INSTANCE.contains(codePoint,
-                CodeType.US_ASCII, CodeType.JIS_X_0201);
     }
 
     /**
@@ -620,6 +629,26 @@ public final class CharsetUtils {
     }
 
     /**
+     * 文字列中の全角英数字を ASCII に変換します。
+     *
+     * @param s 変換前の文字列
+     * @return   変換後の文字列
+     */
+    public static String toAsciiAlnum(CharSequence s) {
+        return CodePointConverters.TO_ASCII_ALNUM.convert(s);
+    }
+
+    /**
+     * 文字列中の全角英数記号を ASCII に変換します。
+     *
+     * @param s 変換前の文字列
+     * @return   変換後の文字列
+     */
+    public static String toAscii(CharSequence s) {
+        return CodePointConverters.TO_ASCII.convert(s);
+    }
+
+    /**
      * 文字列中の全角カタカナ・ひらがなを半角カナに変換します。
      *
      * @param s 変換前の文字列
@@ -635,6 +664,16 @@ public final class CharsetUtils {
             // 半角カナに変換する。
             return CodePointConverters.TO_HALFWIDTH_KANA.convert(decomposed);
         });
+    }
+
+    /**
+     * 文字列中の ASCII 英数字を全角英数字に変換します。
+     *
+     * @param s 変換前の文字列
+     * @return   変換後の文字列
+     */
+    public static String toFullwidthAlnum(CharSequence s) {
+        return CodePointConverters.TO_FULLWIDTH_ALNUM.convert(s);
     }
 
     /**
@@ -674,6 +713,36 @@ public final class CharsetUtils {
     }
 
     /**
+     * 文字列を可能な範囲で JIS 1990 に変換します。
+     *
+     * @param s 変換前の文字列
+     * @return   変換後の文字列
+     */
+    public static String toJis1990(CharSequence s) {
+        return CodePointConverters.TO_JIS_1990.convert(s);
+    }
+
+    /**
+     * 文字列を可能な範囲で JIS 2004 に変換します。
+     *
+     * @param s 変換前の文字列
+     * @return   変換後の文字列
+     */
+    public static String toJis2004(CharSequence s) {
+        return CodePointConverters.TO_JIS_2004.convert(s);
+    }
+
+    /**
+     * 文字列を可能な範囲で Windows-31J に変換します。
+     *
+     * @param s 変換前の文字列
+     * @return   変換後の文字列
+     */
+    public static String toWindows31j(CharSequence s) {
+        return CodePointConverters.TO_WINDOWS_31J.convert(s);
+    }
+
+    /**
      * 文字列をバイト配列にエンコードします。
      *
      * @param s 文字列
@@ -681,8 +750,14 @@ public final class CharsetUtils {
      * @return バイト配列
      */
     public static byte[] encode(CharSequence s, Charset charset) {
+        if (s == null) {
+            return null;
+        }
         try {
-            return charset.newEncoder().encode(CharBuffer.wrap(s)).array();
+            ByteBuffer buf = charset.newEncoder().encode(CharBuffer.wrap(s));
+            byte[] bytes = new byte[buf.remaining()];
+            buf.get(bytes);
+            return bytes;
         } catch (CharacterCodingException e) {
             throw new CharacterCodingRuntimeException(e);
         }
@@ -693,15 +768,24 @@ public final class CharsetUtils {
      *
      * @param s 文字列
      * @param charset 文字コード
-     * @param replace 変換できない文字を置き換えるバイト配列
+     * @param replace 変換できない文字を置き換える文字
      * @return バイト配列
      */
-    public static byte[] encode(CharSequence s, Charset charset, byte[] replace) {
+    public static byte[] encode(CharSequence s, Charset charset, String replace) {
+        if (s == null) {
+            return null;
+        }
         try {
-            return charset.newEncoder()
-                .replaceWith(replace)
-                .encode(CharBuffer.wrap(s))
-                .array();
+            CharsetEncoder encoder = charset.newEncoder()
+                .onMalformedInput(CodingErrorAction.REPLACE)
+                .onUnmappableCharacter(CodingErrorAction.REPLACE);
+            if (StringUtils.isNotEmpty(replace)) {
+                encoder.replaceWith(replace.getBytes(charset));
+            }
+            ByteBuffer buf = encoder.encode(CharBuffer.wrap(s));
+            byte[] bytes = new byte[buf.remaining()];
+            buf.get(bytes);
+            return bytes;
         } catch (CharacterCodingException e) {
             throw new CharacterCodingRuntimeException(e);
         }
@@ -715,6 +799,9 @@ public final class CharsetUtils {
      * @return 文字列
      */
     public static String decode(byte[] bytes, Charset charset) {
+        if (bytes == null) {
+            return null;
+        }
         try {
             return charset.newDecoder().decode(ByteBuffer.wrap(bytes)).toString();
         } catch (CharacterCodingException e) {
@@ -731,9 +818,17 @@ public final class CharsetUtils {
      * @return 文字列
      */
     public static String decode(byte[] bytes, Charset charset, String replace) {
+        if (bytes == null) {
+            return null;
+        }
         try {
-            return charset.newDecoder()
-                .replaceWith(replace)
+            CharsetDecoder decoder = charset.newDecoder()
+                .onMalformedInput(CodingErrorAction.REPLACE)
+                .onUnmappableCharacter(CodingErrorAction.REPLACE);
+            if (StringUtils.isNotEmpty(replace)) {
+                decoder.replaceWith(replace);
+            }
+            return decoder
                 .decode(ByteBuffer.wrap(bytes))
                 .toString();
         } catch (CharacterCodingException e) {

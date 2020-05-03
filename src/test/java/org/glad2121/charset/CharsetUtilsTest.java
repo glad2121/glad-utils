@@ -1010,7 +1010,8 @@ class CharsetUtilsTest {
     @DisplayName("JIS 1990 へ正しく変換されること。")
     void testToJis1990() {
         String source =
-                "\u2014\u2015\u301C\uFF5E\u2016\u2225\u2212\uFF0D"
+                "\u00A5\u203E"
+                + "\u2014\u2015\u301C\uFF5E\u2016\u2225\u2212\uFF0D"
                 + "\u00A2\uFFE0\u00A3\uFFE1\u00AC\uFFE2∑＇＂"
                 + "悅晴淸益礼靖精羽逸閒靑飯飼館髙鶴"
                 + "纊塚增寬德朗橫瀨猪甁神祥福綠緖薰諸賴郞都鄕隆黑"
@@ -1020,7 +1021,8 @@ class CharsetUtilsTest {
                 + "縉";
 
         assertThat(decode(encode(source, SHIFT_JIS, "〓"), SHIFT_JIS)).isEqualTo(
-                "\u2014〓\u301C〓\u2016〓\u2212〓"
+                "\\~"
+                + "\u2014〓\u301C〓\u2016〓\u2212〓"
                 + "\u00A2〓\u00A3〓\u00AC〓〓〓〓"
                 + "〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓"
                 + "〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓"
@@ -1030,7 +1032,8 @@ class CharsetUtilsTest {
                 + "〓");
 
         String target =
-                "\u2014\u2014\u301C\u301C\u2016\u2016\u2212\u2212"
+                "￥￣"
+                + "\u2014\u2014\u301C\u301C\u2016\u2016\u2212\u2212"
                 + "\u00A2\u00A2\u00A3\u00A3\u00AC\u00ACΣ'\""
                 + "悦晴清益礼靖精羽逸間青飯飼館高鶴"
                 + "絋塚増寛徳朗横瀬猪瓶神祥福緑緒薫諸頼郎都郷隆黒"
@@ -1051,7 +1054,8 @@ class CharsetUtilsTest {
     @DisplayName("JIS 2004 へ正しく変換されること。")
     void testToJis2004() {
         String source =
-                "\u2014\u2015\u00A2\uFFE0\u00A3\uFFE1\u00AC\uFFE2∑"
+                "\u00A5\u203E"
+                + "\u2014\u2015\u00A2\uFFE0\u00A3\uFFE1\u00AC\uFFE2∑"
                 + "悅晴淸益礼靖精羽逸閒靑飯飼館髙鶴";
 
         String source2 = "￤";
@@ -1065,7 +1069,8 @@ class CharsetUtilsTest {
                 + "縉";
 
         assertThat(decode(encode(source, SHIFT_JIS_2004, "〓"), SHIFT_JIS_2004)).isEqualTo(
-                "\u2014〓\u00A2〓\u00A3〓\u00AC〓〓"
+                "〓〓"
+                + "\u2014〓\u00A2〓\u00A3〓\u00AC〓〓"
                 + "〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 
         assertThat(decode(encode(source2, SHIFT_JIS_2004, "〓"), SHIFT_JIS_2004))
@@ -1075,7 +1080,8 @@ class CharsetUtilsTest {
             .isEqualTo(source3);
 
         String target =
-                "\u2014\u2014\u00A2\u00A2\u00A3\u00A3\u00AC\u00ACΣ"
+                "￥￣"
+                + "\u2014\u2014\u00A2\u00A2\u00A3\u00A3\u00AC\u00ACΣ"
                 + "悦晴清益礼靖精羽逸間青飯飼館高鶴";
 
         String target2 = "¦";
@@ -1097,7 +1103,8 @@ class CharsetUtilsTest {
     @DisplayName("Windows-31J へ正しく変換されること。")
     void testToWindows31j() {
         String source =
-                "\u2014\u2015\u301C\uFF5E\u2016\u2225\u2212\uFF0D"
+                "\u00A5\u203E"
+                + "\u2014\u2015\u301C\uFF5E\u2016\u2225\u2212\uFF0D"
                 + "\u00A2\uFFE0\u00A3\uFFE1\u00AC\uFFE2"
                 + "俱侮俠倂僧免勉勤卑卽啞喝嘆器嚙囊塡塀墨剝𠮟屢層屮吞噓巢廊徵悔慨憎懲戾揭搔摑擊攢敏"
                 + "既晚暑曆梅槪欄步歷殺每海涉淚渚渴溫漢潑瀆焰煮狀琢硏碑社祉祈祐祖祝禍禎禱穀突節簞緣"
@@ -1112,7 +1119,8 @@ class CharsetUtilsTest {
                 + "纊塚增寬德朗橫瀨猪甁神祥福綠緖薰諸賴郞都鄕隆黑";
 
         assertThat(decode(encode(source, WINDOWS_31J, "〓"), WINDOWS_31J)).isEqualTo(
-                "〓\u2015〓\uFF5E〓\u2225〓\uFF0D"
+                "\\~"
+                + "〓\u2015〓\uFF5E〓\u2225〓\uFF0D"
                 + "\uFFE0\uFFE0\uFFE1\uFFE1\uFFE2\uFFE2"
                 + "〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓"
                 + "〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓"
@@ -1126,7 +1134,8 @@ class CharsetUtilsTest {
             .isEqualTo(source3);
 
         String target =
-                "\u2015\u2015\uFF5E\uFF5E\u2225\u2225\uFF0D\uFF0D"
+                "￥￣"
+                + "\u2015\u2015\uFF5E\uFF5E\u2225\u2225\uFF0D\uFF0D"
                 + "\uFFE0\uFFE0\uFFE1\uFFE1\uFFE2\uFFE2"
                 + "倶侮侠併僧免勉勤卑即唖喝嘆器噛嚢填塀墨剥叱屡層屮呑嘘巣廊徴悔慨憎懲戻掲掻掴撃攅敏"
                 + "既晩暑暦梅概欄歩歴殺毎海渉涙渚渇温漢溌涜焔煮状琢研碑社祉祈祐祖祝禍禎祷穀突節箪縁"

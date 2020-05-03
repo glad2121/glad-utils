@@ -179,8 +179,9 @@ final class CodePointConverters {
      */
     static final CodePointConverter TO_JIS_1990 = CodePointConverter.create(
             "TO_JIS_1990",
+            "\u00A5\u203E"
             // Windows-31J。
-            "\u2015\uFF5E\u2225\uFF0D\uFFE0\uFFE1\uFFE2∑＇＂"
+            + "\u2015\uFF5E\u2225\uFF0D\uFFE0\uFFE1\uFFE2∑＇＂"
             // IBM 拡張文字。
             + "悅晴淸益礼靖精羽逸閒靑飯飼館髙鶴"
             + "纊塚增寬德朗橫瀨猪甁神祥福綠緖薰諸賴郞都鄕隆黑"
@@ -190,8 +191,9 @@ final class CodePointConverters {
             + "練繁繡署者臭萊著蔣虛虜蟬蠟褐視謁謹賓贈軀逸醬醱錄鍊難響頰頻顚類驒鷗鹼麴麵黃姸屛幷瘦繫"
             // JIS X 0213 第4水準。
             + "縉",
+            "￥￣"
             // Windows-31J → JIS X 0208。
-            "\u2014\u301C\u2016\u2212\u00A2\u00A3\u00ACΣ'\""
+            + "\u2014\u301C\u2016\u2212\u00A2\u00A3\u00ACΣ'\""
             // IBM 拡張文字 → JIS X 0208。
             + "悦晴清益礼靖精羽逸間青飯飼館高鶴"
             + "絋塚増寛徳朗横瀬猪瓶神祥福緑緒薫諸頼郎都郷隆黒"
@@ -207,12 +209,14 @@ final class CodePointConverters {
      */
     static final CodePointConverter TO_JIS_2004 = CodePointConverter.create(
             "TO_JIS_2004",
+            "\u00A5\u203E"
             // Windows-31J。
-            "\u2015\uFFE0\uFFE1\uFFE2∑￤"
+            + "\u2015\uFFE0\uFFE1\uFFE2∑￤"
             // IBM 拡張文字。
             + "悅晴淸益礼靖精羽逸閒靑飯飼館髙鶴",
+            "￥￣"
             // Windows-31J → JIS X 0213。
-            "\u2014\u00A2\u00A3\u00ACΣ¦"
+            + "\u2014\u00A2\u00A3\u00ACΣ¦"
             // IBM 拡張文字 → JIS X 0213。
             + "悦晴清益礼靖精羽逸間青飯飼館高鶴");
 
@@ -221,16 +225,18 @@ final class CodePointConverters {
      */
     static final CodePointConverter TO_WINDOWS_31J = CodePointConverter.create(
             "TO_WINDOWS_31J",
+            "\u00A5\u203E"
             // JIS X 0208。
-            "\u2014\u301C\u2016\u2212\u00A2\u00A3\u00AC¦"
+            + "\u2014\u301C\u2016\u2212\u00A2\u00A3\u00AC¦"
             // JIS X 0213 第3水準。
             + "俱侮俠倂僧免勉勤卑卽啞喝嘆器嚙囊塡塀墨剝𠮟屢層屮吞噓巢廊徵悔慨憎懲戾揭搔摑擊攢敏"
             + "既晚暑曆梅槪欄步歷殺每海涉淚渚渴溫漢潑瀆焰煮狀琢硏碑社祉祈祐祖祝禍禎禱穀突節簞緣"
             + "練繁繡署者臭萊著蔣虛虜蟬蠟褐視謁謹賓贈軀逸醬醱錄鍊難響頰頻顚類驒鷗鹼麴麵黃姸屛幷瘦繫"
             // JIS X 0213 第4水準。
             + "縉",
+            "￥￣"
             // JIS X 0208 → Windows-31J。
-            "\u2015\uFF5E\u2225\uFF0D\uFFE0\uFFE1\uFFE2￤"
+            + "\u2015\uFF5E\u2225\uFF0D\uFFE0\uFFE1\uFFE2￤"
             // JIS X 0213 第3水準 → JIS X 0208。
             + "倶侮侠併僧免勉勤卑即唖喝嘆器噛嚢填塀墨剥叱屡層屮呑嘘巣廊徴悔慨憎懲戻掲掻掴撃攅敏"
             + "既晩暑暦梅概欄歩歴殺毎海渉涙渚渇温漢溌涜焔煮状琢研碑社祉祈祐祖祝禍禎祷穀突節箪縁"

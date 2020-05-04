@@ -1,5 +1,7 @@
 package org.glad2121.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,6 +47,22 @@ public final class StringUtils {
      */
     public static String codePointsToString(int... codePoints) {
         return new String(codePoints, 0, codePoints.length);
+    }
+
+    /**
+     * 文字列を Unicode エスケープに変換します。
+     *
+     * @param s 文字列
+     * @return Unicode エスケープ
+     */
+    public static String toUnicodeEscape(CharSequence s) {
+        StringWriter sw = new StringWriter(s.length());
+        PrintWriter pw = new PrintWriter(sw);
+        for (int i = 0; i < s.length(); ++i) {
+            pw.printf("\\u%04X", (int) s.charAt(i));
+        }
+        pw.flush();
+        return sw.toString();
     }
 
     /**

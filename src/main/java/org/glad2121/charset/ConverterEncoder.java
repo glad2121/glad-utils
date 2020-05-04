@@ -31,7 +31,7 @@ class ConverterEncoder extends CharsetEncoder {
      */
     ConverterEncoder(CharsetEncoder delegate, IntUnaryOperator converter) {
         super(delegate.charset(),
-                delegate.averageBytesPerChar(),
+                delegate.maxBytesPerChar(),
                 delegate.maxBytesPerChar(),
                 delegate.replacement());
         this.delegate = delegate;
@@ -51,11 +51,11 @@ class ConverterEncoder extends CharsetEncoder {
                 if (Character.isSurrogate(c)) {
                     // サロゲートペアの場合。
                     if (!in.hasRemaining()) {
-                        return CoderResult.unmappableForLength(1);
+                        return CoderResult.malformedForLength(1);
                     }
                     char c2 = in.get();
                     if (!Character.isSurrogate(c2)) {
-                        return CoderResult.unmappableForLength(1);
+                        return CoderResult.malformedForLength(1);
                     }
                     int cp = Character.toCodePoint(c, c2);
                     // コンバータを適用。
@@ -66,9 +66,18 @@ class ConverterEncoder extends CharsetEncoder {
                     // コンバータを適用。
                     int cp = convert(c);
                     append(buf.clear(), cp);
+                    if (in.hasRemaining()) {
+                        int pos = in.position();
+                        char c2 = in.get();
+                        if (isCombiningChar(c2)) {
+                            append(buf, c2);
+                        } else {
+                            in.position(pos);
+                        }
+                    }
                 }
                 CoderResult result = doEncode(buf.flip(), out);
-                if (result.isError()) {
+                if (!result.isUnderflow()) {
                     return result;
                 }
                 // エンコードが成功した場合は位置を更新する。
@@ -78,6 +87,16 @@ class ConverterEncoder extends CharsetEncoder {
         } finally {
             in.position(mark);
         }
+    }
+
+    /**
+     * 指定された文字が合成用文字か判定します。
+     *
+     * @param c 文字
+     * @return 合成用文字ならば {@code true}
+     */
+    boolean isCombiningChar(int c) {
+        return "\u3099\u309A\u0300\u0301\u02E5\u02E9".indexOf(c) >= 0;
     }
 
     /**
@@ -113,7 +132,12 @@ class ConverterEncoder extends CharsetEncoder {
      * @return 実行結果
      */
     CoderResult doEncode(CharBuffer in, ByteBuffer out) {
-        return delegate.encode(in, out, false);
+        delegate.reset();
+        CoderResult result = delegate.encode(in, out, true);
+        if (result.isUnderflow()) {
+            result = delegate.flush(out);
+        }
+        return result;
     }
 
 }

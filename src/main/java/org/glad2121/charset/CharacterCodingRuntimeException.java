@@ -2,6 +2,9 @@ package org.glad2121.charset;
 
 import java.nio.charset.CharacterCodingException;
 
+import org.glad2121.util.ArrayUtils;
+import org.glad2121.util.StringUtils;
+
 /**
  * 文字のエンコード、デコードでエラーが発生した時にスローされる実行時例外。
  *
@@ -37,11 +40,11 @@ public class CharacterCodingRuntimeException extends RuntimeException {
      * コンストラクタ。
      *
      * @param position エラーの発生位置
-     * @param value エラーの発生した文字
+     * @param value エラーの発生した文字列
      * @param cause 原因となった例外
      */
     public CharacterCodingRuntimeException(
-            int position, char rejected, CharacterCodingException cause) {
+            int position, CharSequence rejected, CharacterCodingException cause) {
         super(message(position, rejected), cause);
         this.position = position;
         this.rejected = rejected;
@@ -51,11 +54,11 @@ public class CharacterCodingRuntimeException extends RuntimeException {
      * コンストラクタ。
      *
      * @param position エラーの発生位置
-     * @param value エラーの発生したバイト
+     * @param value エラーの発生したバイト列
      * @param cause 原因となった例外
      */
     public CharacterCodingRuntimeException(
-            int position, byte rejected, CharacterCodingException cause) {
+            int position, byte[] rejected, CharacterCodingException cause) {
         super(message(position, rejected), cause);
         this.position = position;
         this.rejected = rejected;
@@ -65,18 +68,19 @@ public class CharacterCodingRuntimeException extends RuntimeException {
      * メッセージを生成します。
      *
      * @param position エラーの発生位置
-     * @param rejected エラーの発生した文字
+     * @param rejected エラーの発生した文字列
      * @return メッセージ
      */
-    static String message(int position, char rejected) {
-        if (Character.isISOControl(rejected)
-                || Character.isSurrogate(rejected)
-                || !Character.isDefined(rejected)) {
-            return String.format(
-                    "position: %d, rejected: \\u%04X", position, (int) rejected);
+    static String message(int position, CharSequence rejected) {
+        if (StringUtils.isEmpty(rejected)) {
+            return "position: " + position;
+        } else if (rejected.chars().anyMatch(c ->
+                Character.isISOControl(c) || !Character.isDefined(c))) {
+            return String.format("position: %d, rejected: %s",
+                    position, StringUtils.toUnicodeEscape(rejected));
         } else {
-            return String.format(
-                    "position: %d, rejected: \\u%04X (%s)", position, (int) rejected, rejected);
+            return String.format("position: %d, rejected: %s (%s)",
+                    position, StringUtils.toUnicodeEscape(rejected), rejected);
         }
     }
 
@@ -84,11 +88,16 @@ public class CharacterCodingRuntimeException extends RuntimeException {
      * メッセージを生成します。
      *
      * @param position エラーの発生位置
-     * @param rejected エラーの発生したバイト
+     * @param rejected エラーの発生したバイト列
      * @return メッセージ
      */
-    static String message(int position, byte rejected) {
-        return String.format("position: %d, rejected: 0x%02X", position, rejected);
+    static String message(int position, byte[] rejected) {
+        if (rejected == null || rejected.length == 0) {
+            return "position: " + position;
+        } else {
+            return String.format("position: %d, rejected: 0x%s",
+                    position, ArrayUtils.toHexString(rejected));
+        }
     }
 
     /**

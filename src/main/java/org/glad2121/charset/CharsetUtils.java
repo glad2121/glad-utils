@@ -782,9 +782,10 @@ public final class CharsetUtils {
         } catch (CharacterCodingException e) {
             int position = in.position();
             if (in.hasRemaining()) {
-                throw new CharacterCodingRuntimeException(position, in.get(), e);
+                String rejected = String.valueOf(in.get());
+                throw new CharacterCodingRuntimeException(position, rejected, e);
             } else {
-                throw new CharacterCodingRuntimeException(position, '\0', e);
+                throw new CharacterCodingRuntimeException(position, (String) null, e);
             }
         }
     }
@@ -834,9 +835,11 @@ public final class CharsetUtils {
         } catch (CharacterCodingException e) {
             int position = in.position();
             if (in.hasRemaining()) {
-                throw new CharacterCodingRuntimeException(position, in.get(), e);
+                byte[] rejected = new byte[Math.min(2, in.remaining())];
+                in.get(rejected);
+                throw new CharacterCodingRuntimeException(position, rejected, e);
             } else {
-                throw new CharacterCodingRuntimeException(position, (byte) 0, e);
+                throw new CharacterCodingRuntimeException(position, (byte[]) null, e);
             }
         }
     }

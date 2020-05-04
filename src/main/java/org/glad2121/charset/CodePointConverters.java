@@ -250,13 +250,9 @@ final class CodePointConverters {
     static final CodePointConverter TO_WINDOWS_31J_2004 = CodePointConverter.create(
             "TO_WINDOWS_31J_2004",
             "\u00A5\u203E"
-            // JIS X 0208。
-            + "\u2014\u301C\u2016\u2212\u00A2\u00A3\u00AC¦"
             // JIS X 0213 第4水準。
             + "縉",
             "￥￣"
-            // JIS X 0208 → Windows-31J。
-            + "\u2015\uFF5E\u2225\uFF0D\uFFE0\uFFE1\uFFE2￤"
             // JIS X 0213 第4水準 → JIS X 0208。
             + "縉");
 

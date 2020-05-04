@@ -85,34 +85,45 @@ class Windows31J2004g extends Charset {
          */
         @Override
         CoderResult doEncode(CharBuffer in, ByteBuffer out) {
+            int pos = in.position();
+            char c = in.get();
+            in.position(pos);
+
             // まずは、Windows-31J でエンコード。
-            CoderResult result = super.doEncode(in, out);
-            if (!result.isUnmappable()) {
-                return result;
+            CoderResult result = null;
+            if (c == '\u2015' || c == '\u2211'
+                    || (c >= '\u3400' && c != '\uFF0D' && c != '\uFF5E')) {
+                // 水平線、総和、漢字を対象とする。
+                // 全角記号を対象とするが、全角ハイフンマイナスと全角チルダを除く。
+                result = super.doEncode(in, out);
+                if (!result.isError()) {
+                    return result;
+                }
             }
 
             // Windows-31J でエンコードできない場合、Shift_JIS-2004 で再試行。
             int ss = in.position();
             int ds = out.position();
-            CoderResult result2 = sjis2004.encode(in, out, false);
-            if (result2.isError()) {
-                return result;
+            sjis2004.reset();
+            CoderResult result2 = sjis2004.encode(in, out, true);
+            if (!result2.isUnderflow()) {
+                return result2;
             }
-            int de = out.position();
-            int length = de - ds;
+            sjis2004.flush(out);
+
+            int length = out.position() - ds;
             if (length == 2) {
                 byte[] bytes = new byte[length];
                 out.position(ds);
                 out.get(bytes);
-                if ((bytes[0] & 0xFF) >= 0xF0) {
-                    // 第4水準漢字は不採用。
-                    in.position(ss);
-                    out.position(ds);
-                    return result;
+                if ((bytes[0] & 0xFF) <= 0xEF) {
+                    // 第4水準漢字以外を採用。
+                    return result2;
                 }
             }
-
-            return CoderResult.UNDERFLOW;
+            in.position(ss);
+            out.position(ds);
+            return CoderResult.unmappableForLength(1);
         }
 
     }
@@ -143,13 +154,16 @@ class Windows31J2004g extends Charset {
          */
         @Override
         CoderResult doDecode(ByteBuffer in, CharBuffer out) {
-            byte[] bytes = in.array();
-            int n = bytes[0] & 0xFF;
+            int pos = in.position();
+            int n1 = in.get() & 0xFF;
+            int n2 = (in.hasRemaining()) ? (in.get() & 0xFF) : -1;
+            in.position(pos);
 
             // まずは、Windows-31J でデコード。
             CoderResult result = null;
-            if (!(0xED <= n && n <= 0xEE)) {
-                // NEC 選定 IBM 拡張文字以外を対象とする。
+            if (n1 == 0x81 && (n2 == 0x91 || n2 == 0x92 || n2 == 0xCA)
+                    || n1 == 0x87 || n1 >= 0xF0) {
+                // 全角記号、NEC 特殊文字、IBM 拡張文字を対象とする。
                 result = super.doDecode(in, out);
                 if (!result.isError()) {
                     return result;
@@ -157,14 +171,12 @@ class Windows31J2004g extends Charset {
             }
 
             // Windows-31J でデコードできない場合、Shift_JIS-2004 で再試行。
-            if (0x81 <= n && n <= 0xFE) {
-                // 非漢字・第3水準漢字のみ対象とする。
-                CoderResult result2 = sjis2004.decode(in, out, false);
-                if (!result2.isError()) {
-                    return CoderResult.UNDERFLOW;
-                }
-                if (result == null) {
-                    return result2;
+            if (n1 <= 0xEF) {
+                // 第4水準漢字以外を対象とする。
+                sjis2004.reset();
+                result = sjis2004.decode(in, out, true);
+                if (result.isUnderflow()) {
+                    sjis2004.flush(out);
                 }
             }
 

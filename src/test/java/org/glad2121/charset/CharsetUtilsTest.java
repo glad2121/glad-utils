@@ -3,7 +3,11 @@ package org.glad2121.charset;
 import static org.assertj.core.api.Assertions.*;
 import static org.glad2121.charset.CharsetUtils.*;
 
+import java.nio.charset.Charset;
+import java.util.Arrays;
+
 import org.glad2121.util.ArrayUtils;
+import org.glad2121.util.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -1195,6 +1199,8 @@ class CharsetUtilsTest {
             .hasMessage("position: 0, rejected: 0x80");
         assertThat(decode(ArrayUtils.bytes(0x80), SHIFT_JIS, null)).isEqualTo("\uFFFD");
         assertThat(decode(bytes, SHIFT_JIS)).isEqualTo("\u2014〜‖\u2212¢£¬");
+
+        //checkShiftJis(SHIFT_JIS);
     }
 
     @Test
@@ -1224,6 +1230,8 @@ class CharsetUtilsTest {
 
         byte[] bytes = encode(source, SHIFT_JIS_G, "〓");
         assertThat(decode(bytes, SHIFT_JIS_G)).isEqualTo(target);
+
+        checkShiftJis(SHIFT_JIS_G);
     }
 
     @Test
@@ -1267,6 +1275,8 @@ class CharsetUtilsTest {
             .hasMessage("position: 0, rejected: 0x80");
         assertThat(decode(ArrayUtils.bytes(0x80), SHIFT_JIS_2004, null)).isEqualTo("\uFFFD");
         assertThat(decode(bytes, SHIFT_JIS_2004)).isEqualTo("\u2014〜‖\u2212¢£¬");
+
+        //checkShiftJis(SHIFT_JIS_2004);
     }
 
     @Test
@@ -1296,6 +1306,8 @@ class CharsetUtilsTest {
 
         byte[] bytes = encode(source, SHIFT_JIS_2004_G, "〓");
         assertThat(decode(bytes, SHIFT_JIS_2004_G)).isEqualTo(target);
+
+        checkShiftJis(SHIFT_JIS_2004_G);
     }
 
     @Test
@@ -1339,6 +1351,8 @@ class CharsetUtilsTest {
             .hasMessage("position: 0, rejected: 0x80");
         assertThat(decode(ArrayUtils.bytes(0x80), WINDOWS_31J, null)).isEqualTo("\uFFFD");
         assertThat(decode(bytes, WINDOWS_31J)).isEqualTo("\u2015～∥\uFF0D￠￡￢");
+
+        //checkShiftJis(WINDOWS_31J);
     }
 
     @Test
@@ -1368,15 +1382,18 @@ class CharsetUtilsTest {
 
         byte[] bytes = encode(source, WINDOWS_31J_G, "〓");
         assertThat(decode(bytes, WINDOWS_31J_G)).isEqualTo(target);
+
+        checkShiftJis(WINDOWS_31J_G);
     }
 
     @Test
     @DisplayName("拡張版 Windows-31J-2004 のエンコード・デコードのテスト。")
     void testWindows31j2004G() {
+
         String source =
                 "\u00A5\u203E"
                 + "\u2014\u2015\u301C\uFF5E\u2016\u2225\u2212\uFF0D"
-                + "\u00A2\uFFE0\u00A3\uFFE1\u00AC\uFFE2∑¦"
+                + "\u00A2\uFFE0\u00A3\uFFE1\u00AC\uFFE2∑¦￤"
                 + "悅晴淸益礼靖精羽逸閒靑飯飼館髙鶴"
                 + "纊塚增寬德朗橫瀨猪甁神祥福綠緖薰諸賴郞都鄕隆黑"
                 + "俱侮俠倂僧免勉勤卑卽啞喝嘆器嚙囊塡塀墨剝𠮟屢層屮吞噓巢廊徵悔慨憎懲戾揭搔摑擊攢敏"
@@ -1386,8 +1403,8 @@ class CharsetUtilsTest {
 
         String target =
                 "￥￣"
-                + "\u2015\u2015\uFF5E\uFF5E\u2225\u2225\uFF0D\uFF0D"
-                + "\uFFE0\uFFE0\uFFE1\uFFE1\uFFE2\uFFE2∑￤"
+                + "\u2014\u2014\u301C\uFF5E\u2016\u2225\u2212\uFF0D"
+                + "\uFFE0\uFFE0\uFFE1\uFFE1\uFFE2\uFFE2∑¦￤"
                 + "悅晴淸益礼靖精羽逸閒靑飯飼館髙鶴"
                 + "纊塚增寬德朗橫瀨猪甁神祥福綠緖薰諸賴郞都鄕隆黑"
                 + "俱侮俠倂僧免勉勤卑卽啞喝嘆器嚙囊塡塀墨剝𠮟屢層屮吞噓巢廊徵悔慨憎懲戾揭搔摑擊攢敏"
@@ -1397,6 +1414,71 @@ class CharsetUtilsTest {
 
         byte[] bytes = encode(source, WINDOWS_31J_2004_G, "〓");
         assertThat(decode(bytes, WINDOWS_31J_2004_G)).isEqualTo(target);
+
+        checkShiftJis(WINDOWS_31J_2004_G);
+    }
+
+    void checkShiftJis(Charset charset) {
+        int count = 0;
+        for (int hi = 0x81; hi <= 0x9F; ++hi) {
+            for (int lo = 0x40; lo <= 0x7E; ++lo) {
+                if (!checkShiftJis(charset, hi, lo)) {
+                    ++count;
+                }
+            }
+            for (int lo = 0x80; lo <= 0xFC; ++lo) {
+                if (!checkShiftJis(charset, hi, lo)) {
+                    ++count;
+                }
+            }
+        }
+        for (int hi = 0xE0; hi <= 0xFC; ++hi) {
+            for (int lo = 0x40; lo <= 0x7E; ++lo) {
+                if (!checkShiftJis(charset, hi, lo)) {
+                    ++count;
+                }
+            }
+            for (int lo = 0x80; lo <= 0xFC; ++lo) {
+                if (!checkShiftJis(charset, hi, lo)) {
+                    ++count;
+                }
+            }
+        }
+        if (count > 0) {
+            fail("errors: " + count);
+        }
+    }
+
+    boolean checkShiftJis(Charset charset, int hi, int lo) {
+        byte[] bytes = ArrayUtils.bytes(hi, lo);
+        String s = decode(bytes, charset, null);
+        if (!"\uFFFD".equals(s)) {
+            byte[] encoded = encode(s, charset, "〓");
+            if (!Arrays.equals(encoded, bytes)) {
+                if (WINDOWS_31J_G.equals(charset)
+                        || WINDOWS_31J_2004_G.equals(charset)) {
+                    String decoded = decode(encoded, charset, "〓");
+                    int n1 = encoded[0] & 0xFF;
+                    if (s.equals(decoded)
+                            && (hi == 0x87 || hi == 0xFA || n1 >= 0xF0
+                            || "\uFFE2".equals(s))) {
+                        return true;
+                    }
+                    System.err.printf("0x%s => \"%s\" => 0x%s => \"%s\"%n",
+                            ArrayUtils.toHexString(bytes),
+                            StringUtils.toUnicodeEscape(s),
+                            ArrayUtils.toHexString(encoded),
+                            StringUtils.toUnicodeEscape(decoded));
+                    return false;
+                }
+                System.err.printf("0x%s => \"%s\" => 0x%s%n",
+                        ArrayUtils.toHexString(bytes),
+                        StringUtils.toUnicodeEscape(s),
+                        ArrayUtils.toHexString(encoded));
+                return false;
+            }
+        }
+        return true;
     }
 
 }

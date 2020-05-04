@@ -1,5 +1,8 @@
 package org.glad2121.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * 配列関連のユーティリティ。
  *
@@ -25,6 +28,22 @@ public final class ArrayUtils {
             bytes[i] = (byte) values[i];
         }
         return bytes;
+    }
+
+    /**
+     * バイト配列を16進数文字列に変換します。
+     *
+     * @param a バイト配列
+     * @return 16進数文字列
+     */
+    public static String toHexString(byte[] a) {
+        StringWriter sw = new StringWriter(a.length * 2);
+        PrintWriter pw = new PrintWriter(sw);
+        for (int i = 0; i < a.length; ++i) {
+            pw.printf("%02X", a[i]);
+        }
+        pw.flush();
+        return sw.toString();
     }
 
 }

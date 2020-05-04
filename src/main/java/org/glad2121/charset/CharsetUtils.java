@@ -42,14 +42,34 @@ public final class CharsetUtils {
     public static final Charset SHIFT_JIS = Charset.forName("Shift_JIS");
 
     /**
+     * 拡張版 Shift_JIS
+     */
+    public static final Charset SHIFT_JIS_G = Charset.forName("x-Shift_JIS-g");
+
+    /**
      * Shift_JIS-2004
      */
     public static final Charset SHIFT_JIS_2004 = Charset.forName("x-SJIS_0213");
 
     /**
+     * 拡張版 Shift_JIS-2004
+     */
+    public static final Charset SHIFT_JIS_2004_G = Charset.forName("x-Shift_JIS-2004-g");
+
+    /**
      * Windows-31J
      */
     public static final Charset WINDOWS_31J = Charset.forName("Windows-31J");
+
+    /**
+     * 拡張版 Windows-31J
+     */
+    public static final Charset WINDOWS_31J_G = Charset.forName("x-Windows-31J-g");
+
+    /**
+     * 拡張版 Windows-31J-2004
+     */
+    public static final Charset WINDOWS_31J_2004_G = Charset.forName("x-Windows-31J-2004-g");
 
     /**
      * IBM-942
@@ -753,13 +773,19 @@ public final class CharsetUtils {
         if (s == null) {
             return null;
         }
+        CharBuffer in = CharBuffer.wrap(s);
         try {
-            ByteBuffer buf = charset.newEncoder().encode(CharBuffer.wrap(s));
-            byte[] bytes = new byte[buf.remaining()];
-            buf.get(bytes);
+            ByteBuffer out = charset.newEncoder().encode(in);
+            byte[] bytes = new byte[out.remaining()];
+            out.get(bytes);
             return bytes;
         } catch (CharacterCodingException e) {
-            throw new CharacterCodingRuntimeException(e);
+            int position = in.position();
+            if (in.hasRemaining()) {
+                throw new CharacterCodingRuntimeException(position, in.get(), e);
+            } else {
+                throw new CharacterCodingRuntimeException(position, '\0', e);
+            }
         }
     }
 
@@ -802,10 +828,16 @@ public final class CharsetUtils {
         if (bytes == null) {
             return null;
         }
+        ByteBuffer in = ByteBuffer.wrap(bytes);
         try {
-            return charset.newDecoder().decode(ByteBuffer.wrap(bytes)).toString();
+            return charset.newDecoder().decode(in).toString();
         } catch (CharacterCodingException e) {
-            throw new CharacterCodingRuntimeException(e);
+            int position = in.position();
+            if (in.hasRemaining()) {
+                throw new CharacterCodingRuntimeException(position, in.get(), e);
+            } else {
+                throw new CharacterCodingRuntimeException(position, (byte) 0, e);
+            }
         }
     }
 

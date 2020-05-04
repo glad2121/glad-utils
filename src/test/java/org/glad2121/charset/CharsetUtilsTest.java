@@ -1174,7 +1174,8 @@ class CharsetUtilsTest {
         assertThat(encode("", SHIFT_JIS)).isEmpty();
         assertThat(encode("\u2014〜‖\u2212¢£¬", SHIFT_JIS)).isEqualTo(bytes);
         assertThatThrownBy(() -> encode("\u2015～∥\uFF0D￠￡￢", SHIFT_JIS))
-            .isInstanceOf(CharacterCodingRuntimeException.class);
+            .isInstanceOf(CharacterCodingRuntimeException.class)
+            .hasMessage("position: 0, rejected: \\u2015 (\u2015)");
         assertThat(encode("\u2015～∥\uFF0D￠￡￢", SHIFT_JIS, "〓")).containsExactly(
             0x81, 0xAC,
             0x81, 0xAC,
@@ -1190,9 +1191,39 @@ class CharsetUtilsTest {
         assertThat(decode(new byte[0], SHIFT_JIS)).isEqualTo("");
         assertThat(decode(ArrayUtils.bytes(0x5C, 0x7E), SHIFT_JIS)).isEqualTo("\\~");
         assertThatThrownBy(() -> decode(ArrayUtils.bytes(0x80), SHIFT_JIS))
-            .isInstanceOf(CharacterCodingRuntimeException.class);
+            .isInstanceOf(CharacterCodingRuntimeException.class)
+            .hasMessage("position: 0, rejected: 0x80");
         assertThat(decode(ArrayUtils.bytes(0x80), SHIFT_JIS, null)).isEqualTo("\uFFFD");
         assertThat(decode(bytes, SHIFT_JIS)).isEqualTo("\u2014〜‖\u2212¢£¬");
+    }
+
+    @Test
+    @DisplayName("拡張版 Shift_JIS のエンコード・デコードのテスト。")
+    void testShiftJisG() {
+        String source =
+                "\u00A5\u203E"
+                + "\u2014\u2015\u301C\uFF5E\u2016\u2225\u2212\uFF0D"
+                + "\u00A2\uFFE0\u00A3\uFFE1\u00AC\uFFE2∑＇＂"
+                + "悅晴淸益礼靖精羽逸閒靑飯飼館髙鶴"
+                + "纊塚增寬德朗橫瀨猪甁神祥福綠緖薰諸賴郞都鄕隆黑"
+                + "俱侮俠倂僧免勉勤卑卽啞喝嘆器嚙囊塡塀墨剝𠮟屢層屮吞噓巢廊徵悔慨憎懲戾揭搔摑擊攢敏"
+                + "既晚暑曆梅槪欄步歷殺每海涉淚渚渴溫漢潑瀆焰煮狀琢硏碑社祉祈祐祖祝禍禎禱穀突節簞緣"
+                + "練繁繡署者臭萊著蔣虛虜蟬蠟褐視謁謹賓贈軀逸醬醱錄鍊難響頰頻顚類驒鷗鹼麴麵黃姸屛幷瘦繫"
+                + "縉";
+
+        String target =
+                "￥￣"
+                + "\u2014\u2014\u301C\u301C\u2016\u2016\u2212\u2212"
+                + "\u00A2\u00A2\u00A3\u00A3\u00AC\u00ACΣ'\""
+                + "悦晴清益礼靖精羽逸間青飯飼館高鶴"
+                + "絋塚増寛徳朗横瀬猪瓶神祥福緑緒薫諸頼郎都郷隆黒"
+                + "倶侮侠併僧免勉勤卑即唖喝嘆器噛嚢填塀墨剥叱屡層屮呑嘘巣廊徴悔慨憎懲戻掲掻掴撃攅敏"
+                + "既晩暑暦梅概欄歩歴殺毎海渉涙渚渇温漢溌涜焔煮状琢研碑社祉祈祐祖祝禍禎祷穀突節箪縁"
+                + "練繁繍署者臭莱著蒋虚虜蝉蝋褐視謁謹賓贈躯逸醤醗録錬難響頬頻顛類騨鴎鹸麹麺黄妍屏并痩繋"
+                + "縉";
+
+        byte[] bytes = encode(source, SHIFT_JIS_G, "〓");
+        assertThat(decode(bytes, SHIFT_JIS_G)).isEqualTo(target);
     }
 
     @Test
@@ -1212,7 +1243,8 @@ class CharsetUtilsTest {
         assertThat(encode("", SHIFT_JIS_2004)).isEmpty();
         assertThat(encode("\u2014〜‖\u2212¢£¬", SHIFT_JIS_2004)).isEqualTo(bytes);
         assertThatThrownBy(() -> encode("\u2015～∥\uFF0D￠￡￢", SHIFT_JIS_2004))
-            .isInstanceOf(CharacterCodingRuntimeException.class);
+            .isInstanceOf(CharacterCodingRuntimeException.class)
+            .hasMessage("position: 0, rejected: \\u2015 (\u2015)");
         assertThat(encode("\u2015～∥\uFF0D￠￡￢", SHIFT_JIS_2004, "〓")).containsExactly(
             0x81, 0xAC,
             0x81, 0xB0,
@@ -1231,9 +1263,39 @@ class CharsetUtilsTest {
         assertThat(decode(new byte[0], SHIFT_JIS_2004)).isEqualTo("");
         assertThat(decode(ArrayUtils.bytes(0x5C, 0x7E), SHIFT_JIS_2004)).isEqualTo("\\~");
         assertThatThrownBy(() -> decode(ArrayUtils.bytes(0x80), SHIFT_JIS_2004))
-            .isInstanceOf(CharacterCodingRuntimeException.class);
+            .isInstanceOf(CharacterCodingRuntimeException.class)
+            .hasMessage("position: 0, rejected: 0x80");
         assertThat(decode(ArrayUtils.bytes(0x80), SHIFT_JIS_2004, null)).isEqualTo("\uFFFD");
         assertThat(decode(bytes, SHIFT_JIS_2004)).isEqualTo("\u2014〜‖\u2212¢£¬");
+    }
+
+    @Test
+    @DisplayName("拡張版 Shift_JIS-2004 のエンコード・デコードのテスト。")
+    void testShiftJis2004G() {
+        String source =
+                "\u00A5\u203E"
+                + "\u2014\u2015\u00A2\uFFE0\u00A3\uFFE1\u00AC\uFFE2∑￤"
+                + "\u301C\uFF5E\u2016\u2225\u2212\uFF0D"
+                + "悅晴淸益礼靖精羽逸閒靑飯飼館髙鶴"
+                + "纊塚增寬德朗橫瀨猪甁神祥福綠緖薰諸賴郞都鄕隆黑"
+                + "俱侮俠倂僧免勉勤卑卽啞喝嘆器嚙囊塡塀墨剝𠮟屢層屮吞噓巢廊徵悔慨憎懲戾揭搔摑擊攢敏"
+                + "既晚暑曆梅槪欄步歷殺每海涉淚渚渴溫漢潑瀆焰煮狀琢硏碑社祉祈祐祖祝禍禎禱穀突節簞緣"
+                + "練繁繡署者臭萊著蔣虛虜蟬蠟褐視謁謹賓贈軀逸醬醱錄鍊難響頰頻顚類驒鷗鹼麴麵黃姸屛幷瘦繫"
+                + "縉";
+
+        String target =
+                "￥￣"
+                + "\u2014\u2014\u00A2\u00A2\u00A3\u00A3\u00AC\u00ACΣ¦"
+                + "\u301C\uFF5E\u2016\u2225\u2212\uFF0D"
+                + "悦晴清益礼靖精羽逸間青飯飼館高鶴"
+                + "纊塚增寬德朗橫瀨猪甁神祥福綠緖薰諸賴郞都鄕隆黑"
+                + "俱侮俠倂僧免勉勤卑卽啞喝嘆器嚙囊塡塀墨剝𠮟屢層屮吞噓巢廊徵悔慨憎懲戾揭搔摑擊攢敏"
+                + "既晚暑曆梅槪欄步歷殺每海涉淚渚渴溫漢潑瀆焰煮狀琢硏碑社祉祈祐祖祝禍禎禱穀突節簞緣"
+                + "練繁繡署者臭萊著蔣虛虜蟬蠟褐視謁謹賓贈軀逸醬醱錄鍊難響頰頻顚類驒鷗鹼麴麵黃姸屛幷瘦繫"
+                + "縉";
+
+        byte[] bytes = encode(source, SHIFT_JIS_2004_G, "〓");
+        assertThat(decode(bytes, SHIFT_JIS_2004_G)).isEqualTo(target);
     }
 
     @Test
@@ -1253,7 +1315,8 @@ class CharsetUtilsTest {
         assertThat(encode("", WINDOWS_31J)).isEmpty();
         assertThat(encode("\u2015～∥\uFF0D￠￡￢", WINDOWS_31J)).isEqualTo(bytes);
         assertThatThrownBy(() -> encode("\u2014〜‖\u2212¢£¬", WINDOWS_31J))
-            .isInstanceOf(CharacterCodingRuntimeException.class);
+            .isInstanceOf(CharacterCodingRuntimeException.class)
+            .hasMessage("position: 0, rejected: \\u2014 (\u2014)");
         assertThat(encode("\u2014〜‖\u2212¢£¬", WINDOWS_31J, "〓")).containsExactly(
             0x81, 0xAC,
             0x81, 0xAC,
@@ -1272,9 +1335,68 @@ class CharsetUtilsTest {
         assertThat(decode(new byte[0], WINDOWS_31J)).isEqualTo("");
         assertThat(decode(ArrayUtils.bytes(0x5C, 0x7E), WINDOWS_31J)).isEqualTo("\\~");
         assertThatThrownBy(() -> decode(ArrayUtils.bytes(0x80), WINDOWS_31J))
-            .isInstanceOf(CharacterCodingRuntimeException.class);
+            .isInstanceOf(CharacterCodingRuntimeException.class)
+            .hasMessage("position: 0, rejected: 0x80");
         assertThat(decode(ArrayUtils.bytes(0x80), WINDOWS_31J, null)).isEqualTo("\uFFFD");
         assertThat(decode(bytes, WINDOWS_31J)).isEqualTo("\u2015～∥\uFF0D￠￡￢");
+    }
+
+    @Test
+    @DisplayName("拡張版 Windows-31J のエンコード・デコードのテスト。")
+    void testWindows31jG() {
+        String source =
+                "\u00A5\u203E"
+                + "\u2014\u2015\u301C\uFF5E\u2016\u2225\u2212\uFF0D"
+                + "\u00A2\uFFE0\u00A3\uFFE1\u00AC\uFFE2∑¦"
+                + "悅晴淸益礼靖精羽逸閒靑飯飼館髙鶴"
+                + "纊塚增寬德朗橫瀨猪甁神祥福綠緖薰諸賴郞都鄕隆黑"
+                + "俱侮俠倂僧免勉勤卑卽啞喝嘆器嚙囊塡塀墨剝𠮟屢層屮吞噓巢廊徵悔慨憎懲戾揭搔摑擊攢敏"
+                + "既晚暑曆梅槪欄步歷殺每海涉淚渚渴溫漢潑瀆焰煮狀琢硏碑社祉祈祐祖祝禍禎禱穀突節簞緣"
+                + "練繁繡署者臭萊著蔣虛虜蟬蠟褐視謁謹賓贈軀逸醬醱錄鍊難響頰頻顚類驒鷗鹼麴麵黃姸屛幷瘦繫"
+                + "縉";
+
+        String target =
+                "￥￣"
+                + "\u2015\u2015\uFF5E\uFF5E\u2225\u2225\uFF0D\uFF0D"
+                + "\uFFE0\uFFE0\uFFE1\uFFE1\uFFE2\uFFE2∑￤"
+                + "悅晴淸益礼靖精羽逸閒靑飯飼館髙鶴"
+                + "纊塚增寬德朗橫瀨猪甁神祥福綠緖薰諸賴郞都鄕隆黑"
+                + "倶侮侠併僧免勉勤卑即唖喝嘆器噛嚢填塀墨剥叱屡層屮呑嘘巣廊徴悔慨憎懲戻掲掻掴撃攅敏"
+                + "既晩暑暦梅概欄歩歴殺毎海渉涙渚渇温漢溌涜焔煮状琢研碑社祉祈祐祖祝禍禎祷穀突節箪縁"
+                + "練繁繍署者臭莱著蒋虚虜蝉蝋褐視謁謹賓贈躯逸醤醗録錬難響頬頻顛類騨鴎鹸麹麺黄妍屏并痩繋"
+                + "縉";
+
+        byte[] bytes = encode(source, WINDOWS_31J_G, "〓");
+        assertThat(decode(bytes, WINDOWS_31J_G)).isEqualTo(target);
+    }
+
+    @Test
+    @DisplayName("拡張版 Windows-31J-2004 のエンコード・デコードのテスト。")
+    void testWindows31j2004G() {
+        String source =
+                "\u00A5\u203E"
+                + "\u2014\u2015\u301C\uFF5E\u2016\u2225\u2212\uFF0D"
+                + "\u00A2\uFFE0\u00A3\uFFE1\u00AC\uFFE2∑¦"
+                + "悅晴淸益礼靖精羽逸閒靑飯飼館髙鶴"
+                + "纊塚增寬德朗橫瀨猪甁神祥福綠緖薰諸賴郞都鄕隆黑"
+                + "俱侮俠倂僧免勉勤卑卽啞喝嘆器嚙囊塡塀墨剝𠮟屢層屮吞噓巢廊徵悔慨憎懲戾揭搔摑擊攢敏"
+                + "既晚暑曆梅槪欄步歷殺每海涉淚渚渴溫漢潑瀆焰煮狀琢硏碑社祉祈祐祖祝禍禎禱穀突節簞緣"
+                + "練繁繡署者臭萊著蔣虛虜蟬蠟褐視謁謹賓贈軀逸醬醱錄鍊難響頰頻顚類驒鷗鹼麴麵黃姸屛幷瘦繫"
+                + "縉";
+
+        String target =
+                "￥￣"
+                + "\u2015\u2015\uFF5E\uFF5E\u2225\u2225\uFF0D\uFF0D"
+                + "\uFFE0\uFFE0\uFFE1\uFFE1\uFFE2\uFFE2∑￤"
+                + "悅晴淸益礼靖精羽逸閒靑飯飼館髙鶴"
+                + "纊塚增寬德朗橫瀨猪甁神祥福綠緖薰諸賴郞都鄕隆黑"
+                + "俱侮俠倂僧免勉勤卑卽啞喝嘆器嚙囊塡塀墨剝𠮟屢層屮吞噓巢廊徵悔慨憎懲戾揭搔摑擊攢敏"
+                + "既晚暑曆梅槪欄步歷殺每海涉淚渚渴溫漢潑瀆焰煮狀琢硏碑社祉祈祐祖祝禍禎禱穀突節簞緣"
+                + "練繁繡署者臭萊著蔣虛虜蟬蠟褐視謁謹賓贈軀逸醬醱錄鍊難響頰頻顚類驒鷗鹼麴麵黃姸屛幷瘦繫"
+                + "縉";
+
+        byte[] bytes = encode(source, WINDOWS_31J_2004_G, "〓");
+        assertThat(decode(bytes, WINDOWS_31J_2004_G)).isEqualTo(target);
     }
 
 }

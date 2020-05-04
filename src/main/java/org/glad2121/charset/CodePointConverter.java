@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.IntUnaryOperator;
 
 import org.glad2121.util.NumberUtils;
 import org.glad2121.util.StringUtils;
@@ -15,7 +16,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author glad2121
  */
-class CodePointConverter {
+class CodePointConverter implements IntUnaryOperator {
 
     /**
      * {@code Logger}
@@ -93,6 +94,14 @@ class CodePointConverter {
         Objects.requireNonNull(from, () -> String.format("[%s] from", name));
         Objects.requireNonNull(to, () -> String.format("[%s] to", name));
         return create(name, from.codePoints().toArray(), to.codePoints().toArray());
+    }
+
+    /**
+     * 指定されたオペランドに演算子を適用します。
+     */
+    @Override
+    public int applyAsInt(int operand) {
+        return convert(operand);
     }
 
     /**

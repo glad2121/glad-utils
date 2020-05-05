@@ -14,7 +14,7 @@ import java.util.UUID;
  * タイムスタンプ順にソート可能で、一定の推測困難性を併せ持つ。
  *
  * @author glad2121
- * @see https://github.com/ulid/spec
+ * @see <a href="https://github.com/ulid/spec">The canonical spec for ulid</a>
  */
 public final class ULID implements Serializable, Comparable<ULID> {
 

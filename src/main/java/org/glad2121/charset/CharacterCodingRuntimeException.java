@@ -40,7 +40,7 @@ public class CharacterCodingRuntimeException extends RuntimeException {
      * コンストラクタ。
      *
      * @param position エラーの発生位置
-     * @param value エラーの発生した文字列
+     * @param rejected エラーの発生した文字列
      * @param cause 原因となった例外
      */
     public CharacterCodingRuntimeException(
@@ -54,7 +54,7 @@ public class CharacterCodingRuntimeException extends RuntimeException {
      * コンストラクタ。
      *
      * @param position エラーの発生位置
-     * @param value エラーの発生したバイト列
+     * @param rejected エラーの発生したバイト列
      * @param cause 原因となった例外
      */
     public CharacterCodingRuntimeException(

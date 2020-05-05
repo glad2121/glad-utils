@@ -43,6 +43,7 @@ public final class ClockHolder {
      * クロックを設定し、以前の値を返します。
      *
      * @param clock クロック
+     * @return 以前の値
      */
     public static Clock setClock(Clock clock) {
         return instance.getAndSet(clock != null ? clock : DEFAULT);

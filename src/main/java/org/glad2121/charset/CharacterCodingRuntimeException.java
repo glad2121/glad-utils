@@ -118,7 +118,7 @@ public class CharacterCodingRuntimeException extends RuntimeException {
     }
 
     /**
-     * エラーの発生した文字
+     * エラーの発生した文字を返します。
      *
      * @return エラーの発生した文字
      */

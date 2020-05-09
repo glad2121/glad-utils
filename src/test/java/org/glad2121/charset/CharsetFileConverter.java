@@ -63,7 +63,7 @@ class CharsetFileConverter {
         assertThat(set.count(CodeType.JIS_X_0208)).isEqualTo(6886);
         assertThat(set.count(CodeType.NEC_SPECIAL_CHAR)).isEqualTo(74);
         assertThat(set.count(CodeType.IBM_EXT)).isEqualTo(373);
-        assertThat(set.count(CodeType.JIS_X_0213_3)).isEqualTo(1614);
+        assertThat(set.count(CodeType.JIS_X_0213_3)).isEqualTo(1620);
         assertThat(set.count(CodeType.JIS_X_0213_4)).isEqualTo(2347);
 
         Path path = Paths.get(RESOURCE_PATH,
@@ -82,21 +82,33 @@ class CharsetFileConverter {
             if (in == null) {
                 throw new RuntimeException("Resource not found: " + name);
             }
+            Map<String, Integer> count = new TreeMap<>();
             Map<Integer, CodeType> map = new TreeMap<>();
-            Pattern p = Pattern.compile("U\\+([0-9A-F]+)\\s*,(\\d),.*");
+            Pattern p = Pattern.compile("(?:U\\+([0-9A-F]+)|-)\\s*,(\\d),(\\d{6}),.*");
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(in, StandardCharsets.UTF_8));
             String line;
             while ((line = reader.readLine()) != null) {
                 Matcher m = p.matcher(line);
                 if (m.matches()) {
-                    int codePoint = Integer.parseInt(m.group(1), 16);
-                    int type = Integer.parseInt(m.group(2));
-                    if (0 < type && type < 9) {
-                        map.put(codePoint, CodeType.values()[type]);
+                    String code = m.group(1);
+                    String detail = m.group(3).replaceFirst("[1-7]$", "x");
+                    String prefix = (code == null) ? "-" :
+                        detail.endsWith("x") ? "x" : code.substring(0, 1);
+                    String key = m.group(2)
+                            + ',' + detail.substring(4) + detail.substring(2, 4)
+                            + ',' + detail + ',' + prefix;
+                    count.put(key, count.getOrDefault(key, 0) + 1);
+                    if (m.group(1) != null) {
+                        int codePoint = Integer.parseInt(m.group(1), 16);
+                        int type = Integer.parseInt(m.group(2));
+                        if (0 < type && type < 9) {
+                            map.put(codePoint, CodeType.values()[type]);
+                        }
                     }
                 }
             }
+            count.forEach((k, v) -> System.out.println(k + ": " + v));
             return new CodePointSet(map);
         } catch (IOException e) {
             throw new RuntimeException(e);

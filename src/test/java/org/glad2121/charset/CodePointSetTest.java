@@ -41,9 +41,9 @@ class CodePointSetTest {
         // IBM拡張漢字388字から、JIS X 0208、NEC特殊文字との重複15字を除いたもの。
         assertThat(CodePointSet.INSTANCE.count(CodeType.IBM_EXT)).isEqualTo(373);
         // JIS X 0213:2004 第3水準漢字1259字、追加非漢字659字から、
-        // Windows-31J との重複、結合文字を除いたもの。
-        assertThat(CodePointSet.INSTANCE.count(CodeType.JIS_X_0213_3)).isEqualTo(1614);
-        // JIS X 0213:2004 第4水準漢字2436字から、Windows-31J との重複を除いたもの。
+        // Windows-31J との重複275字、結合文字列25字を除き、結合文字2字を追加したもの。
+        assertThat(CodePointSet.INSTANCE.count(CodeType.JIS_X_0213_3)).isEqualTo(1620);
+        // JIS X 0213:2004 第4水準漢字2436字から、Windows-31J との重複89字を除いたもの。
         assertThat(CodePointSet.INSTANCE.count(CodeType.JIS_X_0213_4)).isEqualTo(2347);
     }
 

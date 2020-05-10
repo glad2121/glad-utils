@@ -27,165 +27,165 @@ class CharsetUtilsTest {
     }
 
     @Test
-    @DisplayName("ASCII 数字の判定が正しく行われること。")
-    void testAsciiNumeric() {
-        assertThat(isAsciiNumeric(null)).isTrue();
-        assertThat(isAsciiNumeric("")).isTrue();
-        assertThat(isAsciiNumeric(" ")).isFalse();
+    @DisplayName("半角数字の判定が正しく行われること。")
+    void testIsHalfwidthNumeric() {
+        assertThat(isHalfwidthNumeric(null)).isTrue();
+        assertThat(isHalfwidthNumeric("")).isTrue();
+        assertThat(isHalfwidthNumeric(" ")).isFalse();
 
         // 半角英数字。
-        assertThat(isAsciiNumeric("0123456789")).isTrue();
-        assertThat(isAsciiNumeric("ABCDEFGHIJKLMNOPQRSTUVWXYZ")).isFalse();
-        assertThat(isAsciiNumeric("abcdefghijklmnopqrstuvwxyz")).isFalse();
+        assertThat(isHalfwidthNumeric("0123456789")).isTrue();
+        assertThat(isHalfwidthNumeric("ABCDEFGHIJKLMNOPQRSTUVWXYZ")).isFalse();
+        assertThat(isHalfwidthNumeric("abcdefghijklmnopqrstuvwxyz")).isFalse();
 
         // 半角カナ。
-        assertThat(isAsciiNumeric("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ")).isFalse();
+        assertThat(isHalfwidthNumeric("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ")).isFalse();
 
         // 全角英数字。
-        assertThat(isAsciiNumeric("　")).isFalse();
-        assertThat(isAsciiNumeric("０１２３４５６７８９")).isFalse();
-        assertThat(isAsciiNumeric("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
-        assertThat(isAsciiNumeric("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
+        assertThat(isHalfwidthNumeric("　")).isFalse();
+        assertThat(isHalfwidthNumeric("０１２３４５６７８９")).isFalse();
+        assertThat(isHalfwidthNumeric("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
+        assertThat(isHalfwidthNumeric("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
 
-        // 全角カタカナ、ひらがな、漢字。
-        assertThat(isAsciiNumeric("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
-        assertThat(isAsciiNumeric("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
-        assertThat(isAsciiNumeric("漢字")).isFalse();
+        // 全角ひらがな、カタカナ、漢字。
+        assertThat(isHalfwidthNumeric("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
+        assertThat(isHalfwidthNumeric("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
+        assertThat(isHalfwidthNumeric("漢字")).isFalse();
 }
 
     @Test
-    @DisplayName("ASCII 英大文字の判定が正しく行われること。")
-    void testAsciiUpper() {
-        assertThat(isAsciiUpper(null)).isTrue();
-        assertThat(isAsciiUpper("")).isTrue();
-        assertThat(isAsciiUpper(" ")).isFalse();
+    @DisplayName("半角英大文字の判定が正しく行われること。")
+    void testIsHalfwidthUpper() {
+        assertThat(isHalfwidthUpper(null)).isTrue();
+        assertThat(isHalfwidthUpper("")).isTrue();
+        assertThat(isHalfwidthUpper(" ")).isFalse();
 
         // 半角英数字。
-        assertThat(isAsciiUpper("0123456789")).isFalse();
-        assertThat(isAsciiUpper("ABCDEFGHIJKLMNOPQRSTUVWXYZ")).isTrue();
-        assertThat(isAsciiUpper("abcdefghijklmnopqrstuvwxyz")).isFalse();
+        assertThat(isHalfwidthUpper("0123456789")).isFalse();
+        assertThat(isHalfwidthUpper("ABCDEFGHIJKLMNOPQRSTUVWXYZ")).isTrue();
+        assertThat(isHalfwidthUpper("abcdefghijklmnopqrstuvwxyz")).isFalse();
 
         // 半角カナ。
-        assertThat(isAsciiUpper("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ")).isFalse();
+        assertThat(isHalfwidthUpper("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ")).isFalse();
 
         // 全角英数字。
-        assertThat(isAsciiUpper("　")).isFalse();
-        assertThat(isAsciiUpper("０１２３４５６７８９")).isFalse();
-        assertThat(isAsciiUpper("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
-        assertThat(isAsciiUpper("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
+        assertThat(isHalfwidthUpper("　")).isFalse();
+        assertThat(isHalfwidthUpper("０１２３４５６７８９")).isFalse();
+        assertThat(isHalfwidthUpper("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
+        assertThat(isHalfwidthUpper("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
 
-        // 全角カタカナ、ひらがな、漢字。
-        assertThat(isAsciiUpper("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
-        assertThat(isAsciiUpper("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
-        assertThat(isAsciiUpper("漢字")).isFalse();
+        // 全角ひらがな、カタカナ、漢字。
+        assertThat(isHalfwidthUpper("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
+        assertThat(isHalfwidthUpper("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
+        assertThat(isHalfwidthUpper("漢字")).isFalse();
     }
 
     @Test
-    @DisplayName("ASCII 英小文字の判定が正しく行われること。")
-    void testAsciiLower() {
-        assertThat(isAsciiLower(null)).isTrue();
-        assertThat(isAsciiLower("")).isTrue();
-        assertThat(isAsciiLower(" ")).isFalse();
+    @DisplayName("半角英小文字の判定が正しく行われること。")
+    void testIsHalfwidthLower() {
+        assertThat(isHalfwidthLower(null)).isTrue();
+        assertThat(isHalfwidthLower("")).isTrue();
+        assertThat(isHalfwidthLower(" ")).isFalse();
 
         // 半角英数字。
-        assertThat(isAsciiLower("0123456789")).isFalse();
-        assertThat(isAsciiLower("ABCDEFGHIJKLMNOPQRSTUVWXYZ")).isFalse();
-        assertThat(isAsciiLower("abcdefghijklmnopqrstuvwxyz")).isTrue();
+        assertThat(isHalfwidthLower("0123456789")).isFalse();
+        assertThat(isHalfwidthLower("ABCDEFGHIJKLMNOPQRSTUVWXYZ")).isFalse();
+        assertThat(isHalfwidthLower("abcdefghijklmnopqrstuvwxyz")).isTrue();
 
         // 半角カナ。
-        assertThat(isAsciiLower("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ")).isFalse();
+        assertThat(isHalfwidthLower("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ")).isFalse();
 
         // 全角英数字。
-        assertThat(isAsciiLower("　")).isFalse();
-        assertThat(isAsciiLower("０１２３４５６７８９")).isFalse();
-        assertThat(isAsciiLower("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
-        assertThat(isAsciiLower("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
+        assertThat(isHalfwidthLower("　")).isFalse();
+        assertThat(isHalfwidthLower("０１２３４５６７８９")).isFalse();
+        assertThat(isHalfwidthLower("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
+        assertThat(isHalfwidthLower("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
 
-        // 全角カタカナ、ひらがな、漢字。
-        assertThat(isAsciiLower("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
-        assertThat(isAsciiLower("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
-        assertThat(isAsciiLower("漢字")).isFalse();
+        // 全角ひらがな、カタカナ、漢字。
+        assertThat(isHalfwidthLower("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
+        assertThat(isHalfwidthLower("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
+        assertThat(isHalfwidthLower("漢字")).isFalse();
     }
 
     @Test
-    @DisplayName("ASCII 英字の判定が正しく行われること。")
-    void testAsciiAlpha() {
-        assertThat(isAsciiAlpha(null)).isTrue();
-        assertThat(isAsciiAlpha("")).isTrue();
-        assertThat(isAsciiAlpha(" ")).isFalse();
+    @DisplayName("半角英字の判定が正しく行われること。")
+    void testIsHalfwidthAlpha() {
+        assertThat(isHalfwidthAlpha(null)).isTrue();
+        assertThat(isHalfwidthAlpha("")).isTrue();
+        assertThat(isHalfwidthAlpha(" ")).isFalse();
 
         // 半角英数字。
-        assertThat(isAsciiAlpha("0123456789")).isFalse();
-        assertThat(isAsciiAlpha("ABCDEFGHIJKLMNOPQRSTUVWXYZ")).isTrue();
-        assertThat(isAsciiAlpha("abcdefghijklmnopqrstuvwxyz")).isTrue();
+        assertThat(isHalfwidthAlpha("0123456789")).isFalse();
+        assertThat(isHalfwidthAlpha("ABCDEFGHIJKLMNOPQRSTUVWXYZ")).isTrue();
+        assertThat(isHalfwidthAlpha("abcdefghijklmnopqrstuvwxyz")).isTrue();
 
         // 半角カナ。
-        assertThat(isAsciiAlpha("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ")).isFalse();
+        assertThat(isHalfwidthAlpha("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ")).isFalse();
 
         // 全角英数字。
-        assertThat(isAsciiAlpha("　")).isFalse();
-        assertThat(isAsciiAlpha("０１２３４５６７８９")).isFalse();
-        assertThat(isAsciiAlpha("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
-        assertThat(isAsciiAlpha("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
+        assertThat(isHalfwidthAlpha("　")).isFalse();
+        assertThat(isHalfwidthAlpha("０１２３４５６７８９")).isFalse();
+        assertThat(isHalfwidthAlpha("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
+        assertThat(isHalfwidthAlpha("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
 
-        // 全角カタカナ、ひらがな、漢字。
-        assertThat(isAsciiAlpha("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
-        assertThat(isAsciiAlpha("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
-        assertThat(isAsciiAlpha("漢字")).isFalse();
+        // 全角ひらがな、カタカナ、漢字。
+        assertThat(isHalfwidthAlpha("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
+        assertThat(isHalfwidthAlpha("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
+        assertThat(isHalfwidthAlpha("漢字")).isFalse();
     }
 
     @Test
-    @DisplayName("ASCII 英数字の判定が正しく行われること。")
-    void testAsciiAlnum() {
-        assertThat(isAsciiAlnum(null)).isTrue();
-        assertThat(isAsciiAlnum("")).isTrue();
-        assertThat(isAsciiAlnum(" ")).isFalse();
+    @DisplayName("半角英数字の判定が正しく行われること。")
+    void testIsHalfwidthAlnum() {
+        assertThat(isHalfwidthAlnum(null)).isTrue();
+        assertThat(isHalfwidthAlnum("")).isTrue();
+        assertThat(isHalfwidthAlnum(" ")).isFalse();
 
         // 半角英数字。
-        assertThat(isAsciiAlnum("0123456789")).isTrue();
-        assertThat(isAsciiAlnum("ABCDEFGHIJKLMNOPQRSTUVWXYZ")).isTrue();
-        assertThat(isAsciiAlnum("abcdefghijklmnopqrstuvwxyz")).isTrue();
+        assertThat(isHalfwidthAlnum("0123456789")).isTrue();
+        assertThat(isHalfwidthAlnum("ABCDEFGHIJKLMNOPQRSTUVWXYZ")).isTrue();
+        assertThat(isHalfwidthAlnum("abcdefghijklmnopqrstuvwxyz")).isTrue();
 
         // 半角カナ。
-        assertThat(isAsciiAlnum("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ")).isFalse();
+        assertThat(isHalfwidthAlnum("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ")).isFalse();
 
         // 全角英数字。
-        assertThat(isAsciiAlnum("　")).isFalse();
-        assertThat(isAsciiAlnum("０１２３４５６７８９")).isFalse();
-        assertThat(isAsciiAlnum("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
-        assertThat(isAsciiAlnum("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
+        assertThat(isHalfwidthAlnum("　")).isFalse();
+        assertThat(isHalfwidthAlnum("０１２３４５６７８９")).isFalse();
+        assertThat(isHalfwidthAlnum("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
+        assertThat(isHalfwidthAlnum("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
 
-        // 全角カタカナ、ひらがな、漢字。
-        assertThat(isAsciiAlnum("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
-        assertThat(isAsciiAlnum("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
-        assertThat(isAsciiAlnum("漢字")).isFalse();
+        // 全角ひらがな、カタカナ、漢字。
+        assertThat(isHalfwidthAlnum("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
+        assertThat(isHalfwidthAlnum("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
+        assertThat(isHalfwidthAlnum("漢字")).isFalse();
     }
 
     @Test
-    @DisplayName("ASCII の判定が正しく行われること。")
-    void testAscii() {
-        assertThat(isAscii(null)).isTrue();
-        assertThat(isAscii("")).isTrue();
-        assertThat(isAscii(" ")).isTrue();
+    @DisplayName("半角 ASCII の判定が正しく行われること。")
+    void testIsHalfwidthAscii() {
+        assertThat(isHalfwidthAscii(null)).isTrue();
+        assertThat(isHalfwidthAscii("")).isTrue();
+        assertThat(isHalfwidthAscii(" ")).isTrue();
 
         // 半角英数字。
-        assertThat(isAscii("0123456789")).isTrue();
-        assertThat(isAscii("ABCDEFGHIJKLMNOPQRSTUVWXYZ")).isTrue();
-        assertThat(isAscii("abcdefghijklmnopqrstuvwxyz")).isTrue();
+        assertThat(isHalfwidthAscii("0123456789")).isTrue();
+        assertThat(isHalfwidthAscii("ABCDEFGHIJKLMNOPQRSTUVWXYZ")).isTrue();
+        assertThat(isHalfwidthAscii("abcdefghijklmnopqrstuvwxyz")).isTrue();
 
         // 半角カナ。
-        assertThat(isAscii("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ")).isFalse();
+        assertThat(isHalfwidthAscii("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ")).isFalse();
 
         // 全角英数字。
-        assertThat(isAscii("　")).isFalse();
-        assertThat(isAscii("０１２３４５６７８９")).isFalse();
-        assertThat(isAscii("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
-        assertThat(isAscii("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
+        assertThat(isHalfwidthAscii("　")).isFalse();
+        assertThat(isHalfwidthAscii("０１２３４５６７８９")).isFalse();
+        assertThat(isHalfwidthAscii("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
+        assertThat(isHalfwidthAscii("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
 
-        // 全角カタカナ、ひらがな、漢字。
-        assertThat(isAscii("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
-        assertThat(isAscii("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
-        assertThat(isAscii("漢字")).isFalse();
+        // 全角ひらがな、カタカナ、漢字。
+        assertThat(isHalfwidthAscii("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
+        assertThat(isHalfwidthAscii("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
+        assertThat(isHalfwidthAscii("漢字")).isFalse();
     }
 
     @Test
@@ -213,11 +213,11 @@ class CharsetUtilsTest {
         assertThat(isHalfwidthKatakana("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
         assertThat(isHalfwidthKatakana("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
 
-        // 全角カタカナ。
-        assertThat(isHalfwidthKatakana("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
-
         // 全角ひらがな。
         assertThat(isHalfwidthKatakana("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
+
+        // 全角カタカナ。
+        assertThat(isHalfwidthKatakana("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
 
         // 漢字。
         assertThat(isHalfwidthKatakana("漢字")).isFalse();
@@ -248,14 +248,49 @@ class CharsetUtilsTest {
         assertThat(isHalfwidthKana("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
         assertThat(isHalfwidthKana("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
 
-        // 全角カタカナ。
-        assertThat(isHalfwidthKana("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
-
         // 全角ひらがな。
         assertThat(isHalfwidthKana("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
 
+        // 全角カタカナ。
+        assertThat(isHalfwidthKana("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
+
         // 漢字。
         assertThat(isHalfwidthKana("漢字")).isFalse();
+    }
+
+    @Test
+    @DisplayName("半角カナを含まない判定が正しく行われること。")
+    void testNoHalfwidthKana() {
+        assertThat(noHalfwidthKana(null)).isTrue();
+        assertThat(noHalfwidthKana("")).isTrue();
+        assertThat(noHalfwidthKana(" ")).isTrue();
+
+        // 半角英数字。
+        assertThat(noHalfwidthKana("0123456789")).isTrue();
+        assertThat(noHalfwidthKana("ABCDEFGHIJKLMNOPQRSTUVWXYZ")).isTrue();
+        assertThat(noHalfwidthKana("abcdefghijklmnopqrstuvwxyz")).isTrue();
+
+        // 半角カナ。
+        assertThat(noHalfwidthKana("､｡｢｣")).isFalse();
+        assertThat(noHalfwidthKana("ｧｨｩｪｫｬｭｮｯ･ｰ")).isFalse();
+        assertThat(noHalfwidthKana("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ")).isFalse();
+        assertThat(noHalfwidthKana("ﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝ")).isFalse();
+        assertThat(noHalfwidthKana("ｶﾞｷﾞｸﾞｹﾞｺﾞｻﾞｼﾞｽﾞｾﾞｿﾞﾀﾞﾁﾞﾂﾞﾃﾞﾄﾞﾊﾞﾋﾞﾌﾞﾍﾞﾎﾞﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟｳﾞ")).isFalse();
+
+        // 全角英数字。
+        assertThat(noHalfwidthKana("　")).isTrue();
+        assertThat(noHalfwidthKana("０１２３４５６７８９")).isTrue();
+        assertThat(noHalfwidthKana("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isTrue();
+        assertThat(noHalfwidthKana("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isTrue();
+
+        // 全角ひらがな。
+        assertThat(noHalfwidthKana("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isTrue();
+
+        // 全角カタカナ。
+        assertThat(noHalfwidthKana("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isTrue();
+
+        // 漢字。
+        assertThat(noHalfwidthKana("漢字")).isTrue();
     }
 
     @Test
@@ -283,11 +318,11 @@ class CharsetUtilsTest {
         assertThat(isJisX0201("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
         assertThat(isJisX0201("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
 
-        // 全角カタカナ。
-        assertThat(isJisX0201("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
-
         // 全角ひらがな。
         assertThat(isJisX0201("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
+
+        // 全角カタカナ。
+        assertThat(isJisX0201("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
 
         // 漢字。
         assertThat(isHalfwidthKana("漢字")).isFalse();
@@ -295,7 +330,7 @@ class CharsetUtilsTest {
 
     @Test
     @DisplayName("全角数字の判定が正しく行われること。")
-    void testFullwidthNumeric() {
+    void testIsFullwidthNumeric() {
         assertThat(isFullwidthNumeric(null)).isTrue();
         assertThat(isFullwidthNumeric("")).isTrue();
         assertThat(isFullwidthNumeric(" ")).isFalse();
@@ -314,15 +349,15 @@ class CharsetUtilsTest {
         assertThat(isFullwidthNumeric("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
         assertThat(isFullwidthNumeric("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
 
-        // 全角カタカナ、ひらがな、漢字。
-        assertThat(isFullwidthNumeric("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
+        // 全角ひらがな、カタカナ、漢字。
         assertThat(isFullwidthNumeric("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
+        assertThat(isFullwidthNumeric("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
         assertThat(isFullwidthNumeric("漢字")).isFalse();
 }
 
     @Test
     @DisplayName("全角英大文字の判定が正しく行われること。")
-    void testFullwidthUpper() {
+    void testIsFullwidthUpper() {
         assertThat(isFullwidthUpper(null)).isTrue();
         assertThat(isFullwidthUpper("")).isTrue();
         assertThat(isFullwidthUpper(" ")).isFalse();
@@ -341,15 +376,15 @@ class CharsetUtilsTest {
         assertThat(isFullwidthUpper("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isTrue();
         assertThat(isFullwidthUpper("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
 
-        // 全角カタカナ、ひらがな、漢字。
-        assertThat(isFullwidthUpper("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
+        // 全角ひらがな、カタカナ、漢字。
         assertThat(isFullwidthUpper("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
+        assertThat(isFullwidthUpper("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
         assertThat(isFullwidthUpper("漢字")).isFalse();
     }
 
     @Test
     @DisplayName("全角英小文字の判定が正しく行われること。")
-    void testFullwidthLower() {
+    void testIsFullwidthLower() {
         assertThat(isFullwidthLower(null)).isTrue();
         assertThat(isFullwidthLower("")).isTrue();
         assertThat(isFullwidthLower(" ")).isFalse();
@@ -368,15 +403,15 @@ class CharsetUtilsTest {
         assertThat(isFullwidthLower("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
         assertThat(isFullwidthLower("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isTrue();
 
-        // 全角カタカナ、ひらがな、漢字。
-        assertThat(isFullwidthLower("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
+        // 全角ひらがな、カタカナ、漢字。
         assertThat(isFullwidthLower("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
+        assertThat(isFullwidthLower("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
         assertThat(isFullwidthLower("漢字")).isFalse();
     }
 
     @Test
     @DisplayName("全角英字の判定が正しく行われること。")
-    void testFullwidthAlpha() {
+    void testIsFullwidthAlpha() {
         assertThat(isFullwidthAlpha(null)).isTrue();
         assertThat(isFullwidthAlpha("")).isTrue();
         assertThat(isFullwidthAlpha(" ")).isFalse();
@@ -395,15 +430,15 @@ class CharsetUtilsTest {
         assertThat(isFullwidthAlpha("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isTrue();
         assertThat(isFullwidthAlpha("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isTrue();
 
-        // 全角カタカナ、ひらがな、漢字。
-        assertThat(isFullwidthAlpha("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
+        // 全角ひらがな、カタカナ、漢字。
         assertThat(isFullwidthAlpha("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
+        assertThat(isFullwidthAlpha("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
         assertThat(isFullwidthAlpha("漢字")).isFalse();
     }
 
     @Test
     @DisplayName("全角英数字の判定が正しく行われること。")
-    void testFullwidthAlnum() {
+    void testIsFullwidthAlnum() {
         assertThat(isFullwidthAlnum(null)).isTrue();
         assertThat(isFullwidthAlnum("")).isTrue();
         assertThat(isFullwidthAlnum(" ")).isFalse();
@@ -422,44 +457,37 @@ class CharsetUtilsTest {
         assertThat(isFullwidthAlnum("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isTrue();
         assertThat(isFullwidthAlnum("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isTrue();
 
-        // 全角カタカナ、ひらがな、漢字。
-        assertThat(isFullwidthAlnum("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
+        // 全角ひらがな、カタカナ、漢字。
         assertThat(isFullwidthAlnum("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
+        assertThat(isFullwidthAlnum("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
         assertThat(isFullwidthAlnum("漢字")).isFalse();
     }
 
     @Test
-    @DisplayName("全角カタカナの判定が正しく行われること。")
-    void testIsFullwidthKatakana() {
-        assertThat(isFullwidthKatakana(null)).isTrue();
-        assertThat(isFullwidthKatakana("")).isTrue();
-        assertThat(isFullwidthKatakana(" ")).isFalse();
+    @DisplayName("全角英数字を含まない判定が正しく行われること。")
+    void testNoFullwidthAlnum() {
+        assertThat(noFullwidthAlnum(null)).isTrue();
+        assertThat(noFullwidthAlnum("")).isTrue();
+        assertThat(noFullwidthAlnum(" ")).isTrue();
 
         // 半角英数字。
-        assertThat(isFullwidthKatakana("0123456789")).isFalse();
-        assertThat(isFullwidthKatakana("ABCDEFGHIJKLMNOPQRSTUVWXYZ")).isFalse();
-        assertThat(isFullwidthKatakana("abcdefghijklmnopqrstuvwxyz")).isFalse();
+        assertThat(noFullwidthAlnum("0123456789")).isTrue();
+        assertThat(noFullwidthAlnum("ABCDEFGHIJKLMNOPQRSTUVWXYZ")).isTrue();
+        assertThat(noFullwidthAlnum("abcdefghijklmnopqrstuvwxyz")).isTrue();
 
         // 半角カナ。
-        assertThat(isFullwidthKatakana("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ")).isFalse();
+        assertThat(noFullwidthAlnum("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ")).isTrue();
 
         // 全角英数字。
-        assertThat(isFullwidthKatakana("　")).isFalse();
-        assertThat(isFullwidthKatakana("０１２３４５６７８９")).isFalse();
-        assertThat(isFullwidthKatakana("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
-        assertThat(isFullwidthKatakana("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
+        assertThat(noFullwidthAlnum("　")).isTrue();
+        assertThat(noFullwidthAlnum("０１２３４５６７８９")).isFalse();
+        assertThat(noFullwidthAlnum("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
+        assertThat(noFullwidthAlnum("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
 
-        // 全角カタカナ。
-        assertThat(isFullwidthKatakana("ァィゥェォャュョッヵヶ・ー")).isTrue();
-        assertThat(isFullwidthKatakana("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isTrue();
-        assertThat(isFullwidthKatakana("ハヒフヘホマミムメモヤユヨラリルレロワヰヱヲン")).isTrue();
-        assertThat(isFullwidthKatakana("ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴヽヾ")).isTrue();
-
-        // 全角ひらがな。
-        assertThat(isFullwidthKatakana("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
-
-        // 漢字。
-        assertThat(isFullwidthKatakana("漢字")).isFalse();
+        // 全角ひらがな、カタカナ、漢字。
+        assertThat(noFullwidthAlnum("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isTrue();
+        assertThat(noFullwidthAlnum("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isTrue();
+        assertThat(noFullwidthAlnum("漢字")).isTrue();
     }
 
     @Test
@@ -483,17 +511,51 @@ class CharsetUtilsTest {
         assertThat(isFullwidthHiragana("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
         assertThat(isFullwidthHiragana("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
 
-        // 全角カタカナ。
-        assertThat(isFullwidthHiragana("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
-
         // 全角ひらがな。
         assertThat(isFullwidthHiragana("ぁぃぅぇぉゃゅょっ・ー")).isTrue();
         assertThat(isFullwidthHiragana("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isTrue();
         assertThat(isFullwidthHiragana("はひふへほまみむめもやゆよらりるれろわゐゑをん")).isTrue();
         assertThat(isFullwidthHiragana("がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゝゞ")).isTrue();
 
+        // 全角カタカナ。
+        assertThat(isFullwidthHiragana("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isFalse();
+
         // 漢字。
         assertThat(isFullwidthHiragana("漢字")).isFalse();
+    }
+
+    @Test
+    @DisplayName("全角カタカナの判定が正しく行われること。")
+    void testIsFullwidthKatakana() {
+        assertThat(isFullwidthKatakana(null)).isTrue();
+        assertThat(isFullwidthKatakana("")).isTrue();
+        assertThat(isFullwidthKatakana(" ")).isFalse();
+
+        // 半角英数字。
+        assertThat(isFullwidthKatakana("0123456789")).isFalse();
+        assertThat(isFullwidthKatakana("ABCDEFGHIJKLMNOPQRSTUVWXYZ")).isFalse();
+        assertThat(isFullwidthKatakana("abcdefghijklmnopqrstuvwxyz")).isFalse();
+
+        // 半角カナ。
+        assertThat(isFullwidthKatakana("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ")).isFalse();
+
+        // 全角英数字。
+        assertThat(isFullwidthKatakana("　")).isFalse();
+        assertThat(isFullwidthKatakana("０１２３４５６７８９")).isFalse();
+        assertThat(isFullwidthKatakana("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
+        assertThat(isFullwidthKatakana("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
+
+        // 全角ひらがな。
+        assertThat(isFullwidthKatakana("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isFalse();
+
+        // 全角カタカナ。
+        assertThat(isFullwidthKatakana("ァィゥェォャュョッヵヶ・ー")).isTrue();
+        assertThat(isFullwidthKatakana("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isTrue();
+        assertThat(isFullwidthKatakana("ハヒフヘホマミムメモヤユヨラリルレロワヰヱヲン")).isTrue();
+        assertThat(isFullwidthKatakana("ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴヽヾ")).isTrue();
+
+        // 漢字。
+        assertThat(isFullwidthKatakana("漢字")).isFalse();
     }
 
     @Test
@@ -518,11 +580,11 @@ class CharsetUtilsTest {
         assertThat(isJis1990("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isTrue();
         assertThat(isJis1990("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isTrue();
 
-        // 全角カタカナ。
-        assertThat(isJis1990("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isTrue();
-
         // 全角ひらがな。
         assertThat(isJis1990("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isTrue();
+
+        // 全角カタカナ。
+        assertThat(isJis1990("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isTrue();
 
         // 第1水準漢字。
         assertThat(isJis1990("亜唖娃阿哀愛挨姶逢葵茜穐悪握渥旭葦芦鯵梓")).isTrue();
@@ -566,11 +628,11 @@ class CharsetUtilsTest {
         assertThat(isJis2004("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isTrue();
         assertThat(isJis2004("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isTrue();
 
-        // 全角カタカナ。
-        assertThat(isJis2004("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isTrue();
-
         // 全角ひらがな。
         assertThat(isJis2004("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isTrue();
+
+        // 全角カタカナ。
+        assertThat(isJis2004("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isTrue();
 
         // 第1水準漢字。
         assertThat(isJis2004("亜唖娃阿哀愛挨姶逢葵茜穐悪握渥旭葦芦鯵梓")).isTrue();
@@ -614,11 +676,11 @@ class CharsetUtilsTest {
         assertThat(isBasicJ("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isFalse();
         assertThat(isBasicJ("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isFalse();
 
-        // 全角カタカナ。
-        assertThat(isBasicJ("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isTrue();
-
         // 全角ひらがな。
         assertThat(isBasicJ("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isTrue();
+
+        // 全角カタカナ。
+        assertThat(isBasicJ("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isTrue();
 
         // 第1水準漢字。
         assertThat(isBasicJ("亜唖娃阿哀愛挨姶逢葵茜穐悪握渥旭葦芦鯵梓")).isTrue();
@@ -662,11 +724,11 @@ class CharsetUtilsTest {
         assertThat(isCommonJ("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isTrue();
         assertThat(isCommonJ("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isTrue();
 
-        // 全角カタカナ。
-        assertThat(isCommonJ("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isTrue();
-
         // 全角ひらがな。
         assertThat(isCommonJ("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isTrue();
+
+        // 全角カタカナ。
+        assertThat(isCommonJ("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isTrue();
 
         // 第1水準漢字。
         assertThat(isCommonJ("亜唖娃阿哀愛挨姶逢葵茜穐悪握渥旭葦芦鯵梓")).isTrue();
@@ -710,11 +772,11 @@ class CharsetUtilsTest {
         assertThat(isAvailable("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ")).isTrue();
         assertThat(isAvailable("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ")).isTrue();
 
-        // 全角カタカナ。
-        assertThat(isAvailable("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isTrue();
-
         // 全角ひらがな。
         assertThat(isAvailable("あいうえおかきくけこさしすせそたちつてとなにぬねの")).isTrue();
+
+        // 全角カタカナ。
+        assertThat(isAvailable("アイウエオカキクケコサシスセソタチツテトナニヌネノ")).isTrue();
 
         // 第1水準漢字。
         assertThat(isAvailable("亜唖娃阿哀愛挨姶逢葵茜穐悪握渥旭葦芦鯵梓")).isTrue();
@@ -737,83 +799,83 @@ class CharsetUtilsTest {
     }
 
     @Test
-    @DisplayName("ASCII 英数字へ正しく変換されること。")
-    void testToAsciiAlnum() {
-        assertThat(toAsciiAlnum(null)).isNull();
-        assertThat(toAsciiAlnum("")).isEqualTo("");
-        assertThat(toAsciiAlnum(" ")).isEqualTo(" ");
+    @DisplayName("半角英数字へ正しく変換されること。")
+    void testToHalfwidthAlnum() {
+        assertThat(toHalfwidthAlnum(null)).isNull();
+        assertThat(toHalfwidthAlnum("")).isEqualTo("");
+        assertThat(toHalfwidthAlnum(" ")).isEqualTo(" ");
 
         // 半角英数字。
-        assertThat(toAsciiAlnum("0123456789"))
+        assertThat(toHalfwidthAlnum("0123456789"))
             .isEqualTo("0123456789");
-        assertThat(toAsciiAlnum("ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+        assertThat(toHalfwidthAlnum("ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
             .isEqualTo("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        assertThat(toAsciiAlnum("abcdefghijklmnopqrstuvwxyz"))
+        assertThat(toHalfwidthAlnum("abcdefghijklmnopqrstuvwxyz"))
             .isEqualTo("abcdefghijklmnopqrstuvwxyz");
-        assertThat(toAsciiAlnum("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"))
+        assertThat(toHalfwidthAlnum("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"))
             .isEqualTo("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
 
         // 半角カナ。
-        assertThat(toAsciiAlnum("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ"))
+        assertThat(toHalfwidthAlnum("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ"))
             .isEqualTo("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ");
 
         // 全角英数字。
-        assertThat(toAsciiAlnum("　")).isEqualTo("　");
-        assertThat(toAsciiAlnum("０１２３４５６７８９"))
+        assertThat(toHalfwidthAlnum("　")).isEqualTo("　");
+        assertThat(toHalfwidthAlnum("０１２３４５６７８９"))
             .isEqualTo("0123456789");
-        assertThat(toAsciiAlnum("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ"))
+        assertThat(toHalfwidthAlnum("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ"))
             .isEqualTo("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        assertThat(toAsciiAlnum("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ"))
+        assertThat(toHalfwidthAlnum("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ"))
             .isEqualTo("abcdefghijklmnopqrstuvwxyz");
-        assertThat(toAsciiAlnum("！＂＃＄％＆＇（）＊＋，－．／：；＜＝＞？＠［＼］＾＿｀｛｜｝〜￥"))
+        assertThat(toHalfwidthAlnum("！＂＃＄％＆＇（）＊＋，－．／：；＜＝＞？＠［＼］＾＿｀｛｜｝〜￥"))
             .isEqualTo("！＂＃＄％＆＇（）＊＋，－．／：；＜＝＞？＠［＼］＾＿｀｛｜｝〜￥");
 
-        // 全角カタカナ、ひらがな、漢字。
-        assertThat(toAsciiAlnum("アイウエオカキクケコサシスセソタチツテトナニヌネノ"))
-            .isEqualTo("アイウエオカキクケコサシスセソタチツテトナニヌネノ");
-        assertThat(toAsciiAlnum("あいうえおかきくけこさしすせそたちつてとなにぬねの"))
+        // 全角ひらがな、カタカナ、漢字。
+        assertThat(toHalfwidthAlnum("あいうえおかきくけこさしすせそたちつてとなにぬねの"))
             .isEqualTo("あいうえおかきくけこさしすせそたちつてとなにぬねの");
-        assertThat(toAsciiAlnum("漢字")).isEqualTo("漢字");
+        assertThat(toHalfwidthAlnum("アイウエオカキクケコサシスセソタチツテトナニヌネノ"))
+            .isEqualTo("アイウエオカキクケコサシスセソタチツテトナニヌネノ");
+        assertThat(toHalfwidthAlnum("漢字")).isEqualTo("漢字");
     }
 
     @Test
-    @DisplayName("ASCII へ正しく変換されること。")
-    void testToAscii() {
-        assertThat(toAscii(null)).isNull();
-        assertThat(toAscii("")).isEqualTo("");
-        assertThat(toAscii(" ")).isEqualTo(" ");
+    @DisplayName("半角 ASCII へ正しく変換されること。")
+    void testToHalfwidthAscii() {
+        assertThat(toHalfwidthAscii(null)).isNull();
+        assertThat(toHalfwidthAscii("")).isEqualTo("");
+        assertThat(toHalfwidthAscii(" ")).isEqualTo(" ");
 
         // 半角英数字。
-        assertThat(toAscii("0123456789"))
+        assertThat(toHalfwidthAscii("0123456789"))
             .isEqualTo("0123456789");
-        assertThat(toAscii("ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+        assertThat(toHalfwidthAscii("ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
             .isEqualTo("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        assertThat(toAscii("abcdefghijklmnopqrstuvwxyz"))
+        assertThat(toHalfwidthAscii("abcdefghijklmnopqrstuvwxyz"))
             .isEqualTo("abcdefghijklmnopqrstuvwxyz");
-        assertThat(toAscii("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"))
+        assertThat(toHalfwidthAscii("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"))
             .isEqualTo("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
 
         // 半角カナ。
-        assertThat(toAscii("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ"))
+        assertThat(toHalfwidthAscii("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ"))
             .isEqualTo("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ");
 
         // 全角英数字。
-        assertThat(toAscii("　")).isEqualTo(" ");
-        assertThat(toAscii("０１２３４５６７８９"))
+        assertThat(toHalfwidthAscii("　")).isEqualTo(" ");
+        assertThat(toHalfwidthAscii("０１２３４５６７８９"))
             .isEqualTo("0123456789");
-        assertThat(toAscii("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ"))
+        assertThat(toHalfwidthAscii("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ"))
             .isEqualTo("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        assertThat(toAscii("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ"))
+        assertThat(toHalfwidthAscii("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ"))
             .isEqualTo("abcdefghijklmnopqrstuvwxyz");
-        assertThat(toAscii("！＂＃＄％＆＇（）＊＋，－．／：；＜＝＞？＠［＼］＾＿｀｛｜｝〜￥"))
+        assertThat(toHalfwidthAscii("！＂＃＄％＆＇（）＊＋，－．／：；＜＝＞？＠［＼］＾＿｀｛｜｝〜￥"))
             .isEqualTo("!\"#$%&'()*+,-./:;<=>?@[＼]^_`{|}〜￥");
 
-        // 全角カタカナ、ひらがな、漢字。
-        assertThat(toAscii("アイウエオカキクケコサシスセソタチツテトナニヌネノ"))
-            .isEqualTo("アイウエオカキクケコサシスセソタチツテトナニヌネノ");
-        assertThat(toAscii("あいうえおかきくけこさしすせそたちつてとなにぬねの"))
+        // 全角ひらがな、カタカナ、漢字。
+        assertThat(toHalfwidthAscii("あいうえおかきくけこさしすせそたちつてとなにぬねの"))
             .isEqualTo("あいうえおかきくけこさしすせそたちつてとなにぬねの");
-        assertThat(toAscii("漢字")).isEqualTo("漢字");
+        assertThat(toHalfwidthAscii("アイウエオカキクケコサシスセソタチツテトナニヌネノ"))
+            .isEqualTo("アイウエオカキクケコサシスセソタチツテトナニヌネノ");
+        assertThat(toHalfwidthAscii("漢字")).isEqualTo("漢字");
     }
 
     @Test
@@ -842,15 +904,6 @@ class CharsetUtilsTest {
         // 全角句読点。
         assertThat(toHalfwidthKana("　、。「」・ー")).isEqualTo(" ､｡｢｣･ｰ");
 
-        // 全角カタカナ。
-        assertThat(toHalfwidthKana("ァィゥェォャュョッヮヵヶ")).isEqualTo("ｧｨｩｪｫｬｭｮｯヮヵヶ");
-        assertThat(toHalfwidthKana("アイウエオカキクケコサシスセソタチツテトナニヌネノ"))
-            .isEqualTo("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ");
-        assertThat(toHalfwidthKana("ハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンヽ"))
-            .isEqualTo("ﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜヰヱｦﾝヽ");
-        assertThat(toHalfwidthKana("ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴヾ"))
-            .isEqualTo("ｶﾞｷﾞｸﾞｹﾞｺﾞｻﾞｼﾞｽﾞｾﾞｿﾞﾀﾞﾁﾞﾂﾞﾃﾞﾄﾞﾊﾞﾋﾞﾌﾞﾍﾞﾎﾞﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟｳﾞヾ");
-
         // 全角ひらがな。
         assertThat(toHalfwidthKana("ぁぃぅぇぉゃゅょっゎ")).isEqualTo("ｧｨｩｪｫｬｭｮｯゎ");
         assertThat(toHalfwidthKana("あいうえおかきくけこさしすせそたちつてとなにぬねの"))
@@ -859,6 +912,15 @@ class CharsetUtilsTest {
             .isEqualTo("ﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜゐゑｦﾝゝ");
         assertThat(toHalfwidthKana("がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゞ"))
             .isEqualTo("ｶﾞｷﾞｸﾞｹﾞｺﾞｻﾞｼﾞｽﾞｾﾞｿﾞﾀﾞﾁﾞﾂﾞﾃﾞﾄﾞﾊﾞﾋﾞﾌﾞﾍﾞﾎﾞﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟゞ");
+
+        // 全角カタカナ。
+        assertThat(toHalfwidthKana("ァィゥェォャュョッヮヵヶ")).isEqualTo("ｧｨｩｪｫｬｭｮｯヮヵヶ");
+        assertThat(toHalfwidthKana("アイウエオカキクケコサシスセソタチツテトナニヌネノ"))
+            .isEqualTo("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ");
+        assertThat(toHalfwidthKana("ハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンヽ"))
+            .isEqualTo("ﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜヰヱｦﾝヽ");
+        assertThat(toHalfwidthKana("ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴヾ"))
+            .isEqualTo("ｶﾞｷﾞｸﾞｹﾞｺﾞｻﾞｼﾞｽﾞｾﾞｿﾞﾀﾞﾁﾞﾂﾞﾃﾞﾄﾞﾊﾞﾋﾞﾌﾞﾍﾞﾎﾞﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟｳﾞヾ");
 
         // 漢字。
         assertThat(toHalfwidthKana("漢字")).isEqualTo("漢字");
@@ -896,69 +958,16 @@ class CharsetUtilsTest {
         assertThat(toFullwidthAlnum("！＂＃＄％＆＇（）＊＋，－．／：；＜＝＞？＠［＼］＾＿｀｛｜｝〜￥"))
             .isEqualTo("！＂＃＄％＆＇（）＊＋，－．／：；＜＝＞？＠［＼］＾＿｀｛｜｝〜￥");
 
-        // 全角カタカナ、ひらがな、漢字。
-        assertThat(toFullwidthAlnum("アイウエオカキクケコサシスセソタチツテトナニヌネノ"))
-            .isEqualTo("アイウエオカキクケコサシスセソタチツテトナニヌネノ");
+        // 全角ひらがな、カタカナ、漢字。
         assertThat(toFullwidthAlnum("あいうえおかきくけこさしすせそたちつてとなにぬねの"))
             .isEqualTo("あいうえおかきくけこさしすせそたちつてとなにぬねの");
+        assertThat(toFullwidthAlnum("アイウエオカキクケコサシスセソタチツテトナニヌネノ"))
+            .isEqualTo("アイウエオカキクケコサシスセソタチツテトナニヌネノ");
         assertThat(toFullwidthAlnum("漢字")).isEqualTo("漢字");
     }
 
     @Test
-    @DisplayName("全角カタカナへ正しく変換されること。")
-    void testToFullwidthKatakana() {
-        assertThat(toFullwidthKatakana(null)).isNull();
-        assertThat(toFullwidthKatakana("")).isEqualTo("");
-        assertThat(toFullwidthKatakana(" ")).isEqualTo(" ");
-
-        // 半角英数字。
-        assertThat(toFullwidthKatakana("0123456789"))
-            .isEqualTo("0123456789");
-        assertThat(toFullwidthKatakana("ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
-            .isEqualTo("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        assertThat(toFullwidthKatakana("abcdefghijklmnopqrstuvwxyz"))
-            .isEqualTo("abcdefghijklmnopqrstuvwxyz");
-
-        // 半角カナ。
-        assertThat(toFullwidthKatakana("､｡｢｣･ｰ")).isEqualTo("、。「」・ー");
-        assertThat(toFullwidthKatakana("ｧｨｩｪｫｬｭｮｯ"))
-            .isEqualTo("ァィゥェォャュョッ");
-        assertThat(toFullwidthKatakana("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ"))
-            .isEqualTo("アイウエオカキクケコサシスセソタチツテトナニヌネノ");
-        assertThat(toFullwidthKatakana("ﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝ"))
-            .isEqualTo("ハヒフヘホマミムメモヤユヨラリルレロワヲン");
-        assertThat(toFullwidthKatakana("ｶﾞｷﾞｸﾞｹﾞｺﾞｻﾞｼﾞｽﾞｾﾞｿﾞﾀﾞﾁﾞﾂﾞﾃﾞﾄﾞﾊﾞﾋﾞﾌﾞﾍﾞﾎﾞﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟｳﾞ"))
-            .isEqualTo("ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴ");
-
-        // 全角句読点。
-        assertThat(toFullwidthKatakana("　、。「」・ー")).isEqualTo("　、。「」・ー");
-
-        // 全角カタカナ。
-        assertThat(toFullwidthKatakana("ァィゥェォャュョッヮヵヶ"))
-            .isEqualTo("ァィゥェォャュョッヮヵヶ");
-        assertThat(toFullwidthKatakana("アイウエオカキクケコサシスセソタチツテトナニヌネノ"))
-            .isEqualTo("アイウエオカキクケコサシスセソタチツテトナニヌネノ");
-        assertThat(toFullwidthKatakana("ハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンヽ"))
-            .isEqualTo("ハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンヽ");
-        assertThat(toFullwidthKatakana("ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴヾ"))
-            .isEqualTo("ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴヾ");
-
-        // 全角ひらがな。
-        assertThat(toFullwidthKatakana("ぁぃぅぇぉゃゅょっゎ"))
-            .isEqualTo("ァィゥェォャュョッヮ");
-        assertThat(toFullwidthKatakana("あいうえおかきくけこさしすせそたちつてとなにぬねの"))
-            .isEqualTo("アイウエオカキクケコサシスセソタチツテトナニヌネノ");
-        assertThat(toFullwidthKatakana("はひふへほまみむめもやゆよらりるれろわゐゑをんゝ"))
-            .isEqualTo("ハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンヽ");
-        assertThat(toFullwidthKatakana("がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゞ"))
-            .isEqualTo("ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヾ");
-
-        // 漢字。
-        assertThat(toFullwidthKatakana("漢字")).isEqualTo("漢字");
-    }
-
-    @Test
-    @DisplayName("全角ひらがなへ正しく変換されること。")
+    @DisplayName("半角カナから全角ひらがなへ正しく変換されること。")
     void testToFullwidthHiragana() {
         assertThat(toFullwidthHiragana(null)).isNull();
         assertThat(toFullwidthHiragana("")).isEqualTo("");
@@ -986,16 +995,6 @@ class CharsetUtilsTest {
         // 全角句読点。
         assertThat(toFullwidthHiragana("　、。「」・ー")).isEqualTo("　、。「」・ー");
 
-        // 全角カタカナ。
-        assertThat(toFullwidthHiragana("ァィゥェォャュョッヮヵヶ"))
-            .isEqualTo("ぁぃぅぇぉゃゅょっゎ\u3095\u3096");
-        assertThat(toFullwidthHiragana("アイウエオカキクケコサシスセソタチツテトナニヌネノ"))
-            .isEqualTo("あいうえおかきくけこさしすせそたちつてとなにぬねの");
-        assertThat(toFullwidthHiragana("ハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンヽ"))
-            .isEqualTo("はひふへほまみむめもやゆよらりるれろわゐゑをんゝ");
-        assertThat(toFullwidthHiragana("ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴヾ"))
-            .isEqualTo("がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ\u3094ゞ");
-
         // 全角ひらがな。
         assertThat(toFullwidthHiragana("ぁぃぅぇぉゃゅょっゎ"))
             .isEqualTo("ぁぃぅぇぉゃゅょっゎ");
@@ -1006,8 +1005,205 @@ class CharsetUtilsTest {
         assertThat(toFullwidthHiragana("がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゞ"))
             .isEqualTo("がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゞ");
 
+        // 全角カタカナ。
+        assertThat(toFullwidthHiragana("ァィゥェォャュョッヮヵヶ"))
+            .isEqualTo("ァィゥェォャュョッヮヵヶ");
+        assertThat(toFullwidthHiragana("アイウエオカキクケコサシスセソタチツテトナニヌネノ"))
+            .isEqualTo("アイウエオカキクケコサシスセソタチツテトナニヌネノ");
+        assertThat(toFullwidthHiragana("ハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンヽ"))
+            .isEqualTo("ハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンヽ");
+        assertThat(toFullwidthHiragana("ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴヾ"))
+            .isEqualTo("ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴヾ");
+
         // 漢字。
         assertThat(toFullwidthHiragana("漢字")).isEqualTo("漢字");
+    }
+
+    @Test
+    @DisplayName("半角カナから全角カタカナへ正しく変換されること。")
+    void testToFullwidthKatakana() {
+        assertThat(toFullwidthKatakana(null)).isNull();
+        assertThat(toFullwidthKatakana("")).isEqualTo("");
+        assertThat(toFullwidthKatakana(" ")).isEqualTo(" ");
+
+        // 半角英数字。
+        assertThat(toFullwidthKatakana("0123456789"))
+            .isEqualTo("0123456789");
+        assertThat(toFullwidthKatakana("ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+            .isEqualTo("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        assertThat(toFullwidthKatakana("abcdefghijklmnopqrstuvwxyz"))
+            .isEqualTo("abcdefghijklmnopqrstuvwxyz");
+
+        // 半角カナ。
+        assertThat(toFullwidthKatakana("､｡｢｣･ｰ")).isEqualTo("、。「」・ー");
+        assertThat(toFullwidthKatakana("ｧｨｩｪｫｬｭｮｯ"))
+            .isEqualTo("ァィゥェォャュョッ");
+        assertThat(toFullwidthKatakana("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ"))
+            .isEqualTo("アイウエオカキクケコサシスセソタチツテトナニヌネノ");
+        assertThat(toFullwidthKatakana("ﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝ"))
+            .isEqualTo("ハヒフヘホマミムメモヤユヨラリルレロワヲン");
+        assertThat(toFullwidthKatakana("ｶﾞｷﾞｸﾞｹﾞｺﾞｻﾞｼﾞｽﾞｾﾞｿﾞﾀﾞﾁﾞﾂﾞﾃﾞﾄﾞﾊﾞﾋﾞﾌﾞﾍﾞﾎﾞﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟｳﾞ"))
+            .isEqualTo("ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴ");
+
+        // 全角句読点。
+        assertThat(toFullwidthKatakana("　、。「」・ー")).isEqualTo("　、。「」・ー");
+
+        // 全角ひらがな。
+        assertThat(toFullwidthKatakana("ぁぃぅぇぉゃゅょっゎ"))
+            .isEqualTo("ぁぃぅぇぉゃゅょっゎ");
+        assertThat(toFullwidthKatakana("あいうえおかきくけこさしすせそたちつてとなにぬねの"))
+            .isEqualTo("あいうえおかきくけこさしすせそたちつてとなにぬねの");
+        assertThat(toFullwidthKatakana("はひふへほまみむめもやゆよらりるれろわゐゑをんゝ"))
+            .isEqualTo("はひふへほまみむめもやゆよらりるれろわゐゑをんゝ");
+        assertThat(toFullwidthKatakana("がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゞ"))
+            .isEqualTo("がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゞ");
+
+        // 全角カタカナ。
+        assertThat(toFullwidthKatakana("ァィゥェォャュョッヮヵヶ"))
+            .isEqualTo("ァィゥェォャュョッヮヵヶ");
+        assertThat(toFullwidthKatakana("アイウエオカキクケコサシスセソタチツテトナニヌネノ"))
+            .isEqualTo("アイウエオカキクケコサシスセソタチツテトナニヌネノ");
+        assertThat(toFullwidthKatakana("ハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンヽ"))
+            .isEqualTo("ハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンヽ");
+        assertThat(toFullwidthKatakana("ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴヾ"))
+            .isEqualTo("ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴヾ");
+
+        // 漢字。
+        assertThat(toFullwidthKatakana("漢字")).isEqualTo("漢字");
+    }
+
+    @Test
+    @DisplayName("全角カタカナから全角ひらがなへ正しく変換されること。")
+    void testToHiragana() {
+        assertThat(toHiragana(null)).isNull();
+        assertThat(toHiragana("")).isEqualTo("");
+        assertThat(toHiragana(" ")).isEqualTo(" ");
+
+        // 半角英数字。
+        assertThat(toHiragana("0123456789"))
+            .isEqualTo("0123456789");
+        assertThat(toHiragana("ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+            .isEqualTo("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        assertThat(toHiragana("abcdefghijklmnopqrstuvwxyz"))
+            .isEqualTo("abcdefghijklmnopqrstuvwxyz");
+
+        // 半角カナ。
+        assertThat(toHiragana("､｡｢｣･ｰ")).isEqualTo("､｡｢｣･ｰ");
+        assertThat(toHiragana("ｧｨｩｪｫｬｭｮｯ")).isEqualTo("ｧｨｩｪｫｬｭｮｯ");
+        assertThat(toHiragana("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ"))
+            .isEqualTo("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ");
+        assertThat(toHiragana("ﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝ"))
+            .isEqualTo("ﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝ");
+        assertThat(toHiragana("ｶﾞｷﾞｸﾞｹﾞｺﾞｻﾞｼﾞｽﾞｾﾞｿﾞﾀﾞﾁﾞﾂﾞﾃﾞﾄﾞﾊﾞﾋﾞﾌﾞﾍﾞﾎﾞﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟｳﾞ"))
+            .isEqualTo("ｶﾞｷﾞｸﾞｹﾞｺﾞｻﾞｼﾞｽﾞｾﾞｿﾞﾀﾞﾁﾞﾂﾞﾃﾞﾄﾞﾊﾞﾋﾞﾌﾞﾍﾞﾎﾞﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟｳﾞ");
+
+        // 全角句読点。
+        assertThat(toHiragana("　、。「」・ー")).isEqualTo("　、。「」・ー");
+
+        // 全角ひらがな。
+        assertThat(toHiragana("ぁぃぅぇぉゃゅょっゎ"))
+            .isEqualTo("ぁぃぅぇぉゃゅょっゎ");
+        assertThat(toHiragana("あいうえおかきくけこさしすせそたちつてとなにぬねの"))
+            .isEqualTo("あいうえおかきくけこさしすせそたちつてとなにぬねの");
+        assertThat(toHiragana("はひふへほまみむめもやゆよらりるれろわゐゑをんゝ"))
+            .isEqualTo("はひふへほまみむめもやゆよらりるれろわゐゑをんゝ");
+        assertThat(toHiragana("がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゞ"))
+            .isEqualTo("がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゞ");
+
+        // 全角カタカナ。
+        assertThat(toHiragana("ァィゥェォャュョッヮヵヶ"))
+            .isEqualTo("ぁぃぅぇぉゃゅょっゎ\u3095\u3096");
+        assertThat(toHiragana("アイウエオカキクケコサシスセソタチツテトナニヌネノ"))
+            .isEqualTo("あいうえおかきくけこさしすせそたちつてとなにぬねの");
+        assertThat(toHiragana("ハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンヽ"))
+            .isEqualTo("はひふへほまみむめもやゆよらりるれろわゐゑをんゝ");
+        assertThat(toHiragana("ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴヾ"))
+            .isEqualTo("がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ\u3094ゞ");
+
+        // 漢字。
+        assertThat(toHiragana("漢字")).isEqualTo("漢字");
+    }
+
+    @Test
+    @DisplayName("全角ひらがなから全角カタカナへ正しく変換されること。")
+    void testToKatakana() {
+        assertThat(toKatakana(null)).isNull();
+        assertThat(toKatakana("")).isEqualTo("");
+        assertThat(toKatakana(" ")).isEqualTo(" ");
+
+        // 半角英数字。
+        assertThat(toKatakana("0123456789"))
+            .isEqualTo("0123456789");
+        assertThat(toKatakana("ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+            .isEqualTo("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        assertThat(toKatakana("abcdefghijklmnopqrstuvwxyz"))
+            .isEqualTo("abcdefghijklmnopqrstuvwxyz");
+
+        // 半角カナ。
+        assertThat(toKatakana("､｡｢｣･ｰ")).isEqualTo("､｡｢｣･ｰ");
+        assertThat(toKatakana("ｧｨｩｪｫｬｭｮｯ")).isEqualTo("ｧｨｩｪｫｬｭｮｯ");
+        assertThat(toKatakana("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ"))
+            .isEqualTo("ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ");
+        assertThat(toKatakana("ﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝ"))
+            .isEqualTo("ﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝ");
+        assertThat(toKatakana("ｶﾞｷﾞｸﾞｹﾞｺﾞｻﾞｼﾞｽﾞｾﾞｿﾞﾀﾞﾁﾞﾂﾞﾃﾞﾄﾞﾊﾞﾋﾞﾌﾞﾍﾞﾎﾞﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟｳﾞ"))
+            .isEqualTo("ｶﾞｷﾞｸﾞｹﾞｺﾞｻﾞｼﾞｽﾞｾﾞｿﾞﾀﾞﾁﾞﾂﾞﾃﾞﾄﾞﾊﾞﾋﾞﾌﾞﾍﾞﾎﾞﾊﾟﾋﾟﾌﾟﾍﾟﾎﾟｳﾞ");
+
+        // 全角句読点。
+        assertThat(toKatakana("　、。「」・ー")).isEqualTo("　、。「」・ー");
+
+        // 全角カタカナ。
+        assertThat(toKatakana("ァィゥェォャュョッヮヵヶ"))
+            .isEqualTo("ァィゥェォャュョッヮヵヶ");
+        assertThat(toKatakana("アイウエオカキクケコサシスセソタチツテトナニヌネノ"))
+            .isEqualTo("アイウエオカキクケコサシスセソタチツテトナニヌネノ");
+        assertThat(toKatakana("ハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンヽ"))
+            .isEqualTo("ハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンヽ");
+        assertThat(toKatakana("ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴヾ"))
+            .isEqualTo("ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴヾ");
+
+        // 全角ひらがな。
+        assertThat(toKatakana("ぁぃぅぇぉゃゅょっゎ"))
+            .isEqualTo("ァィゥェォャュョッヮ");
+        assertThat(toKatakana("あいうえおかきくけこさしすせそたちつてとなにぬねの"))
+            .isEqualTo("アイウエオカキクケコサシスセソタチツテトナニヌネノ");
+        assertThat(toKatakana("はひふへほまみむめもやゆよらりるれろわゐゑをんゝ"))
+            .isEqualTo("ハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンヽ");
+        assertThat(toKatakana("がぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽゞ"))
+            .isEqualTo("ガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヾ");
+
+        // 漢字。
+        assertThat(toKatakana("漢字")).isEqualTo("漢字");
+    }
+
+    @Test
+    @DisplayName("濁点・半濁点の合成が正しく行われること。")
+    void testComposeVoicedSoundMark() {
+        assertThat(composeVoicedSoundMark(null)).isNull();
+        assertThat(composeVoicedSoundMark("")).isEqualTo("");
+        assertThat(composeVoicedSoundMark(" ")).isEqualTo(" ");
+
+        assertThat(composeVoicedSoundMark("か\u3099き\u3099く\u3099け\u3099こ\u3099"))
+            .isEqualTo("がぎぐげご");
+        assertThat(composeVoicedSoundMark("さ\u3099し\u3099す\u3099せ\u3099そ\u3099"))
+            .isEqualTo("ざじずぜぞ");
+        assertThat(composeVoicedSoundMark("た\u3099ち\u3099つ\u3099て\u3099と\u3099"))
+            .isEqualTo("だぢづでど");
+        assertThat(composeVoicedSoundMark("は\u3099ひ\u3099ふ\u3099へ\u3099ほ\u3099"))
+            .isEqualTo("ばびぶべぼ");
+        assertThat(composeVoicedSoundMark("は\u309Aひ\u309Aふ\u309Aへ\u309Aほ\u309A"))
+            .isEqualTo("ぱぴぷぺぽ");
+
+        assertThat(composeVoicedSoundMark("カ\u3099キ\u3099ク\u3099ケ\u3099コ\u3099"))
+            .isEqualTo("ガギグゲゴ");
+        assertThat(composeVoicedSoundMark("サ\u3099シ\u3099ス\u3099セ\u3099ソ\u3099"))
+            .isEqualTo("ザジズゼゾ");
+        assertThat(composeVoicedSoundMark("タ\u3099チ\u3099ツ\u3099テ\u3099ト\u3099"))
+            .isEqualTo("ダヂヅデド");
+        assertThat(composeVoicedSoundMark("ハ\u3099ヒ\u3099フ\u3099ヘ\u3099ホ\u3099"))
+            .isEqualTo("バビブベボ");
+        assertThat(composeVoicedSoundMark("ハ\u309Aヒ\u309Aフ\u309Aヘ\u309Aホ\u309A"))
+            .isEqualTo("パピプペポ");
     }
 
     @Test

@@ -92,16 +92,10 @@ public final class CharsetUtils {
     public static final Charset IBM_939 = Charset.forName("x-IBM939");
 
     /**
-     * 半角カタカナのパターン。
+     * 全角ひらがなのパターン。
      */
-    static final Pattern HALFWIDTH_KATAKANA_PATTERN =
-            Pattern.compile("[\uFF65-\uFF9F]+");
-
-    /**
-     * 半角カナのパターン。
-     */
-    static final Pattern HALFWIDTH_KANA_PATTERN =
-            Pattern.compile("[\uFF61-\uFF9F]+");
+    static final Pattern FULLWIDTH_HIRAGANA_PATTERN =
+            Pattern.compile("[\u3041-\u3096\u3099-\u309E\u30A0\u30FB\u30FC]+");
 
     /**
      * 全角カタカナのパターン。
@@ -110,39 +104,30 @@ public final class CharsetUtils {
             Pattern.compile("[\u30A0-\u30FE\u3099-\u309C]+");
 
     /**
-     * 全角ひらがなのパターン。
-     */
-    static final Pattern FULLWIDTH_HIRAGANA_PATTERN =
-            Pattern.compile("[\u3041-\u3096\u3099-\u309E\u30A0\u30FB\u30FC]+");
-
-    /**
-     * 全角カタカナ・ひらがなのパターン。
+     * 全角ひらがな・カタカナのパターン。
      */
     static final Pattern FULLWIDTH_KANA_PATTERN =
             Pattern.compile("[　、。「」\u3041-\u3096\u3099-\u309E\u30A0-\u30FE]+");
 
     /**
-     * 半角カナと互換性のある、全角カタカナ・ひらがなのパターン。
+     * 半角カナと互換性のある、全角ひらがな・カタカナのパターン。
      * <p>
-     * {@link FULLWIDTH_KANA_PATTERN} から変換に問題がる文字を除いたもの。
+     * 全角ひらがな・カタカナから変換に問題がある文字（ゝ、ゞ、ヸ、ヹ、ヽ、ヾ）を除いたもの。
      */
     static final Pattern FULLWIDTH_COMPATIBLE_KANA_PATTERN =
             Pattern.compile("[　、。「」\u3041-\u3096\u3099-\u309A\u30A0-\u30F7\u30FA-\u30FC]+");
 
     /**
-     * 半角カナ・全角カタカナ・ひらがなのパターン。
-     */
-    static final Pattern KANA_PATTERN =
-            Pattern.compile("[、。「」\u3041-\u3096\u3099-\u309E\u30A1-\u30FE\uFF61-\uFF9F]+");
-
-    /**
      * 利用可能な文字のうち、JIS X 0213:2004 に含まれない文字。
      */
     static final String NON_JIS_2004 =
-            "∑"
+            // NEC 特殊文字。
+            "\u2015∑"
+            // IBM 拡張漢字 (補助漢字)。
             + "伹俍俿僘兤冾劜勀卲叝坥墲奓奣妺巐弡恝惞愑"
             + "戓朎昮汯浯涖渹猤玽珒珵琩硺羡菶蕫譓軏遧釞"
             + "鈆鉷鋕鎤鏸鐱鑈靃餧鮻"
+            // IBM 拡張漢字。
             + "仼僴凬﨎坙峵悅愠敎昻晴櫢淸淲皂益礼靖精羽"
             + "蠇赶﨣逸﨧﨨閒﨩靑飯飼館髙鶴";
 
@@ -153,141 +138,141 @@ public final class CharsetUtils {
     }
 
     /**
-     * 文字列を構成する文字がすべて ASCII の数字か判定します。
+     * 文字列を構成する文字がすべて半角数字か判定します。
      *
      * @param s 文字列
-     * @return すべて ASCII の数字ならば {@code true}
+     * @return すべて半角数字ならば {@code true}
      */
-    public static boolean isAsciiNumeric(CharSequence s) {
+    public static boolean isHalfwidthNumeric(CharSequence s) {
         if (StringUtils.isEmpty(s)) {
             return true;
         }
-        return s.chars().allMatch(CharsetUtils::isAsciiNumeric);
+        return s.chars().allMatch(CharsetUtils::isHalfwidthNumeric);
     }
 
     /**
-     * 指定されたコードポイントが ASCII の数字か判定します。
+     * 指定されたコードポイントが半角数字か判定します。
      *
      * @param codePoint コードポイント
-     * @return ASCII の数字ならば {@code true}
+     * @return 半角数字ならば {@code true}
      */
-    static boolean isAsciiNumeric(int codePoint) {
+    static boolean isHalfwidthNumeric(int codePoint) {
         return ('0' <= codePoint) && (codePoint <= '9');
     }
 
     /**
-     * 文字列を構成する文字がすべて ASCII の英大文字か判定します。
+     * 文字列を構成する文字がすべて半角英大文字か判定します。
      *
      * @param s 文字列
-     * @return すべて ASCII の英大文字ならば {@code true}
+     * @return すべて半角英大文字ならば {@code true}
      */
-    public static boolean isAsciiUpper(CharSequence s) {
+    public static boolean isHalfwidthUpper(CharSequence s) {
         if (StringUtils.isEmpty(s)) {
             return true;
         }
-        return s.chars().allMatch(CharsetUtils::isAsciiUpper);
+        return s.chars().allMatch(CharsetUtils::isHalfwidthUpper);
     }
 
     /**
-     * 指定されたコードポイントが ASCII の英大文字か判定します。
+     * 指定されたコードポイントが半角英大文字か判定します。
      *
      * @param codePoint コードポイント
-     * @return ASCII の英大文字ならば {@code true}
+     * @return 半角英大文字ならば {@code true}
      */
-    static boolean isAsciiUpper(int codePoint) {
+    static boolean isHalfwidthUpper(int codePoint) {
         return ('A' <= codePoint) && (codePoint <= 'Z');
     }
 
     /**
-     * 文字列を構成する文字がすべて ASCII の英小文字か判定します。
+     * 文字列を構成する文字がすべて半角英小文字か判定します。
      *
      * @param s 文字列
-     * @return すべて ASCII の英小文字ならば {@code true}
+     * @return すべて半角英小文字ならば {@code true}
      */
-    public static boolean isAsciiLower(CharSequence s) {
+    public static boolean isHalfwidthLower(CharSequence s) {
         if (StringUtils.isEmpty(s)) {
             return true;
         }
-        return s.chars().allMatch(CharsetUtils::isAsciiLower);
+        return s.chars().allMatch(CharsetUtils::isHalfwidthLower);
     }
 
     /**
-     * 指定されたコードポイントが ASCII の英小文字か判定します。
+     * 指定されたコードポイントが半角英小文字か判定します。
      *
      * @param codePoint コードポイント
-     * @return ASCII の英小文字ならば {@code true}
+     * @return 半角英小文字ならば {@code true}
      */
-    static boolean isAsciiLower(int codePoint) {
+    static boolean isHalfwidthLower(int codePoint) {
         return ('a' <= codePoint) && (codePoint <= 'z');
     }
 
     /**
-     * 文字列を構成する文字がすべて ASCII の英字か判定します。
+     * 文字列を構成する文字がすべて半角英字か判定します。
      *
      * @param s 文字列
-     * @return すべて ASCII の英字ならば {@code true}
+     * @return すべて半角英字ならば {@code true}
      */
-    public static boolean isAsciiAlpha(CharSequence s) {
+    public static boolean isHalfwidthAlpha(CharSequence s) {
         if (StringUtils.isEmpty(s)) {
             return true;
         }
-        return s.chars().allMatch(CharsetUtils::isAsciiAlpha);
+        return s.chars().allMatch(CharsetUtils::isHalfwidthAlpha);
     }
 
     /**
-     * 指定されたコードポイントが ASCII の英字か判定します。
+     * 指定されたコードポイントが半角英字か判定します。
      *
      * @param codePoint コードポイント
-     * @return ASCII の英字ならば {@code true}
+     * @return 半角英字ならば {@code true}
      */
-    static boolean isAsciiAlpha(int codePoint) {
-        return isAsciiUpper(codePoint) || isAsciiLower(codePoint);
+    static boolean isHalfwidthAlpha(int codePoint) {
+        return isHalfwidthUpper(codePoint) || isHalfwidthLower(codePoint);
     }
 
     /**
-     * 文字列を構成する文字がすべて ASCII の英数字か判定します。
+     * 文字列を構成する文字がすべて半角英数字か判定します。
      *
      * @param s 文字列
-     * @return すべて ASCII の英数字ならば {@code true}
+     * @return すべて半角英数字ならば {@code true}
      */
-    public static boolean isAsciiAlnum(CharSequence s) {
+    public static boolean isHalfwidthAlnum(CharSequence s) {
         if (StringUtils.isEmpty(s)) {
             return true;
         }
-        return s.chars().allMatch(CharsetUtils::isAsciiAlnum);
+        return s.chars().allMatch(CharsetUtils::isHalfwidthAlnum);
     }
 
     /**
-     * 指定されたコードポイントが ASCII の英数字か判定します。
+     * 指定されたコードポイントが半角英数字か判定します。
      *
      * @param codePoint コードポイント
-     * @return ASCII の英数字ならば {@code true}
+     * @return 半角英数字ならば {@code true}
      */
-    static boolean isAsciiAlnum(int codePoint) {
-        return isAsciiNumeric(codePoint) || isAsciiAlpha(codePoint);
+    static boolean isHalfwidthAlnum(int codePoint) {
+        return isHalfwidthNumeric(codePoint) || isHalfwidthAlpha(codePoint);
     }
 
     /**
-     * 文字列を構成する文字がすべて ASCII か判定します。
+     * 文字列を構成する文字がすべて半角 ASCII か判定します。
      *
      * @param s 文字列
-     * @return すべて ASCII ならば {@code true}
+     * @return すべて半角 ASCII ならば {@code true}
      */
-    public static boolean isAscii(CharSequence s) {
+    public static boolean isHalfwidthAscii(CharSequence s) {
         if (StringUtils.isEmpty(s)) {
             return true;
         }
-        return s.chars().allMatch(CharsetUtils::isAscii);
+        return s.chars().allMatch(CharsetUtils::isHalfwidthAscii);
     }
 
     /**
-     * 指定されたコードポイントが ASCII か判定します。
+     * 指定されたコードポイントが半角 ASCII か判定します。
      *
      * @param codePoint コードポイント
-     * @return ASCII ならば {@code true}
+     * @return 半角 ASCII ならば {@code true}
      */
-    static boolean isAscii(int codePoint) {
-        return CodePointSet.INSTANCE.contains(codePoint, CodeType.US_ASCII);
+    static boolean isHalfwidthAscii(int codePoint) {
+        return (0x20 <= codePoint) && (codePoint <= 0x7E);
     }
 
     /**
@@ -300,7 +285,12 @@ public final class CharsetUtils {
         if (StringUtils.isEmpty(s)) {
             return true;
         }
-        return HALFWIDTH_KATAKANA_PATTERN.matcher(s).matches();
+        //return HALFWIDTH_KATAKANA_PATTERN.matcher(s).matches();
+        return s.chars().allMatch(CharsetUtils::isHalfwidthKatakana);
+    }
+
+    static boolean isHalfwidthKatakana(int codePoint) {
+        return (0xFF65 <= codePoint) && (codePoint <= 0xFF9F);
     }
 
     /**
@@ -313,7 +303,31 @@ public final class CharsetUtils {
         if (StringUtils.isEmpty(s)) {
             return true;
         }
-        return HALFWIDTH_KANA_PATTERN.matcher(s).matches();
+        return s.chars().allMatch(CharsetUtils::isHalfwidthKana);
+        //return HALFWIDTH_KANA_PATTERN.matcher(s).matches();
+    }
+
+    /**
+     * 指定されたコードポイントが半角カナか判定します。
+     *
+     * @param codePoint コードポイント
+     * @return 半角カナならば {@code true}
+     */
+    static boolean isHalfwidthKana(int codePoint) {
+        return (0xFF61 <= codePoint) && (codePoint <= 0xFF9F);
+    }
+
+    /**
+     * 文字列が半角カナを含まないことを判定します。
+     *
+     * @param s 文字列
+     * @return 半角カナを含まなければ {@code true}
+     */
+    public static boolean noHalfwidthKana(CharSequence s) {
+        if (StringUtils.isEmpty(s)) {
+            return true;
+        }
+        return !(s.chars().anyMatch(CharsetUtils::isHalfwidthKana));
     }
 
     /**
@@ -462,26 +476,26 @@ public final class CharsetUtils {
     }
 
     /**
-     * 指定されたコードポイントが ASCII と互換性のある全角文字か判定します。
-     *
-     * @param codePoint コードポイント
-     * @return ASCII と互換性のある全角文字ならば {@code true}
-     */
-    static boolean isFullwidthCompatibleAscii(int codePoint) {
-        return ('\uFF01' <= codePoint) && (codePoint <= '\uFF5E');
-    }
-
-    /**
-     * 文字列を構成する文字がすべて全角カタカナか判定します。
+     * 文字列が全角英数字を含まないことを確認します。
      *
      * @param s 文字列
-     * @return すべて全角カタカナならば {@code true}
+     * @return 全角英数字を含まなければ {@code true}
      */
-    public static boolean isFullwidthKatakana(CharSequence s) {
+    public static boolean noFullwidthAlnum(CharSequence s) {
         if (StringUtils.isEmpty(s)) {
             return true;
         }
-        return FULLWIDTH_KATAKANA_PATTERN.matcher(s).matches();
+        return !(s.chars().anyMatch(CharsetUtils::isFullwidthAlnum));
+    }
+
+    /**
+     * 指定されたコードポイントが全角 ASCII か判定します。
+     *
+     * @param codePoint コードポイント
+     * @return 全角 ASCII ならば {@code true}
+     */
+    static boolean isFullwidthAscii(int codePoint) {
+        return ('\uFF01' <= codePoint) && (codePoint <= '\uFF5E');
     }
 
     /**
@@ -495,6 +509,19 @@ public final class CharsetUtils {
             return true;
         }
         return FULLWIDTH_HIRAGANA_PATTERN.matcher(s).matches();
+    }
+
+    /**
+     * 文字列を構成する文字がすべて全角カタカナか判定します。
+     *
+     * @param s 文字列
+     * @return すべて全角カタカナならば {@code true}
+     */
+    public static boolean isFullwidthKatakana(CharSequence s) {
+        if (StringUtils.isEmpty(s)) {
+            return true;
+        }
+        return FULLWIDTH_KATAKANA_PATTERN.matcher(s).matches();
     }
 
     /**
@@ -569,7 +596,7 @@ public final class CharsetUtils {
      * 以下の文字が該当します。
      * <ul>
      *   <li>US-ASCII</li>
-     *   <li>JIS X 0208-1990 (ASCII と互換性のある全角英数記号を除く)</li>
+     *   <li>JIS X 0208-1990 (全角 ASCII を除く)</li>
      * </ul>
      *
      * @param s 文字列
@@ -591,7 +618,10 @@ public final class CharsetUtils {
     static boolean isBasicJ(int codePoint) {
         return CodePointSet.INSTANCE.contains(codePoint,
                 CodeType.US_ASCII, CodeType.JIS_X_0208)
-                && !isFullwidthCompatibleAscii(codePoint);
+                && !isFullwidthAscii(codePoint)
+                && codePoint != 0x2015
+                && codePoint != 0x2225
+                && !(0xFFE0 <= codePoint && codePoint <= 0xFFE2);
     }
 
     /**
@@ -624,8 +654,8 @@ public final class CharsetUtils {
      */
     static boolean isCommonJ(int codePoint) {
         return CodePointSet.INSTANCE.contains(codePoint,
-                CodeType.US_ASCII, CodeType.JIS_X_0201, CodeType.JIS_X_0208,
-                CodeType.NEC_SPECIAL_CHAR, CodeType.IBM_EXT);
+                CodeType.US_ASCII, CodeType.JIS_X_0201,
+                CodeType.JIS_X_0208, CodeType.NEC_SPECIAL_CHAR, CodeType.IBM_EXT);
     }
 
     /**
@@ -649,23 +679,23 @@ public final class CharsetUtils {
     }
 
     /**
-     * 文字列中の全角英数字を ASCII に変換します。
+     * 文字列中の全角英数字を半角英数字に変換します。
      *
      * @param s 変換前の文字列
      * @return   変換後の文字列
      */
-    public static String toAsciiAlnum(CharSequence s) {
-        return CodePointConverters.TO_ASCII_ALNUM.convert(s);
+    public static String toHalfwidthAlnum(CharSequence s) {
+        return CodePointConverters.TO_HALFWIDTH_ALNUM.convert(s);
     }
 
     /**
-     * 文字列中の全角英数記号を ASCII に変換します。
+     * 文字列中の全角 ASCII を半角 ASCII に変換します。
      *
      * @param s 変換前の文字列
      * @return   変換後の文字列
      */
-    public static String toAscii(CharSequence s) {
-        return CodePointConverters.TO_ASCII.convert(s);
+    public static String toHalfwidthAscii(CharSequence s) {
+        return CodePointConverters.TO_HALFWIDTH_ASCII.convert(s);
     }
 
     /**
@@ -678,16 +708,15 @@ public final class CharsetUtils {
         if (s == null || "".equals(s)) {
             return (String) s;
         }
-        return StringUtils.replaceAll(s, FULLWIDTH_COMPATIBLE_KANA_PATTERN, g -> {
-            // 濁点・半濁点を分解する。
-            String decomposed = Normalizer.normalize(g, Normalizer.Form.NFD);
-            // 半角カナに変換する。
-            return CodePointConverters.TO_HALFWIDTH_KANA.convert(decomposed);
-        });
+        // 濁点・半濁点を分解する。
+        String decomposed = StringUtils.replaceAll(s, FULLWIDTH_COMPATIBLE_KANA_PATTERN,
+                g -> Normalizer.normalize(g, Normalizer.Form.NFD));
+        // 半角カナに変換する。
+        return CodePointConverters.TO_HALFWIDTH_KANA.convert(decomposed);
     }
 
     /**
-     * 文字列中の ASCII 英数字を全角英数字に変換します。
+     * 文字列中の半角英数字を全角英数字に変換します。
      *
      * @param s 変換前の文字列
      * @return   変換後の文字列
@@ -697,25 +726,7 @@ public final class CharsetUtils {
     }
 
     /**
-     * 文字列中の半角カナ・全角ひらがなを全角カタカナに変換します。
-     *
-     * @param s 変換前の文字列
-     * @return   変換後の文字列
-     */
-    public static String toFullwidthKatakana(CharSequence s) {
-        if (s == null || "".equals(s)) {
-            return (String) s;
-        }
-        return StringUtils.replaceAll(s, KANA_PATTERN, g -> {
-            // 全角カタカナに変換する。
-            String converted = CodePointConverters.TO_FULLWIDTH_KATAKANA.convert(g);
-            // 濁点・半濁点を結合する。
-            return Normalizer.normalize(converted, Normalizer.Form.NFC);
-        });
-    }
-
-    /**
-     * 文字列中の半角カナ・全角カタカナを全角ひらがなに変換します。
+     * 文字列中の半角カナを全角ひらがなに変換します。
      *
      * @param s 変換前の文字列
      * @return   変換後の文字列
@@ -724,12 +735,68 @@ public final class CharsetUtils {
         if (s == null || "".equals(s)) {
             return (String) s;
         }
-        return StringUtils.replaceAll(s, KANA_PATTERN, g -> {
-            // 全角カタカナに変換する。
-            String converted = CodePointConverters.TO_FULLWIDTH_HIRAGANA.convert(g);
-            // 濁点・半濁点を結合する。
-            return Normalizer.normalize(converted, Normalizer.Form.NFC);
-        });
+        // 全角カタカナに変換する。
+        String converted = CodePointConverters.TO_FULLWIDTH_HIRAGANA.convert(s);
+        // 濁点・半濁点を合成する。
+        return StringUtils.replaceAll(converted, FULLWIDTH_KANA_PATTERN,
+                g -> Normalizer.normalize(converted, Normalizer.Form.NFC));
+    }
+
+    /**
+     * 文字列中の半角カナを全角カタカナに変換します。
+     *
+     * @param s 変換前の文字列
+     * @return   変換後の文字列
+     */
+    public static String toFullwidthKatakana(CharSequence s) {
+        if (s == null || "".equals(s)) {
+            return (String) s;
+        }
+        // 全角カタカナに変換する。
+        String converted = CodePointConverters.TO_FULLWIDTH_KATAKANA.convert(s);
+        // 濁点・半濁点を合成する。
+        return StringUtils.replaceAll(converted, FULLWIDTH_KANA_PATTERN,
+                g -> Normalizer.normalize(converted, Normalizer.Form.NFC));
+    }
+
+    /**
+     * 文字列中の全角カタカナを全角ひらがなに変換します。
+     *
+     * @param s 変換前の文字列
+     * @return   変換後の文字列
+     */
+    public static String toHiragana(CharSequence s) {
+        if (s == null || "".equals(s)) {
+            return (String) s;
+        }
+        return CodePointConverters.TO_HIRAGANA.convert(s);
+    }
+
+    /**
+     * 文字列中の全角ひらがなを全角カタカナに変換します。
+     *
+     * @param s 変換前の文字列
+     * @return   変換後の文字列
+     */
+    public static String toKatakana(CharSequence s) {
+        if (s == null || "".equals(s)) {
+            return (String) s;
+        }
+        return CodePointConverters.TO_KATAKANA.convert(s);
+    }
+
+    /**
+     * 文字列中の合成可能な濁点・半濁点を合成します。
+     *
+     * @param s 変換前の文字列
+     * @return   変換後の文字列
+     */
+    public static String composeVoicedSoundMark(CharSequence s) {
+        if (s == null || "".equals(s)) {
+            return (String) s;
+        }
+        return StringUtils.replaceAll(s, FULLWIDTH_KANA_PATTERN,
+                g -> Normalizer.normalize(g, Normalizer.Form.NFC));
     }
 
     /**

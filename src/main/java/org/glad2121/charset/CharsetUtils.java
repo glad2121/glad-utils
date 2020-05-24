@@ -72,22 +72,22 @@ public final class CharsetUtils {
     public static final Charset WINDOWS_31J_2004_G = Charset.forName("x-Windows-31J-2004-g");
 
     /**
-     * IBM-942
+     * IBM-942 (OS/2)
      */
     public static final Charset IBM_942 = Charset.forName("x-IBM942");
 
     /**
-     * IBM-943
+     * IBM-943 (OS/2、NEC特殊文字対応)
      */
     public static final Charset IBM_943 = Charset.forName("x-IBM943");
 
     /**
-     * IBM-930
+     * IBM-930 (日本語カタカナ漢字)
      */
     public static final Charset IBM_930 = Charset.forName("x-IBM930");
 
     /**
-     * IBM-939
+     * IBM-939 (日本語ラテン文字漢字)
      */
     public static final Charset IBM_939 = Charset.forName("x-IBM939");
 

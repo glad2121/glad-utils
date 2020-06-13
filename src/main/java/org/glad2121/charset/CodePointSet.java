@@ -73,9 +73,11 @@ class CodePointSet {
      */
     public boolean contains(int codePoint, CodeType... types) {
         CodeType ct = codeType(codePoint);
-        for (CodeType type: types) {
-            if (ct == type) {
-                return true;
+        if (ct != null) {
+            for (CodeType type : types) {
+                if (ct.equals(type)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -180,7 +182,7 @@ class CodePointSet {
         US_ASCII,
 
         /**
-         * 2: JIS X 0201 (半角カナ)
+         * 2: JIS X 0201 (半角カナ)。
          */
         JIS_X_0201,
 
@@ -190,12 +192,12 @@ class CodePointSet {
         JIS_X_0208,
 
         /**
-         * 4: NEC 特殊文字。
+         * 4: Windows-31J (NEC 特殊文字)。
          */
         NEC_SPECIAL_CHAR,
 
         /**
-         * 5: IBM 拡張漢字。
+         * 5: Windows-31J (IBM 拡張漢字)。
          */
         IBM_EXT,
 

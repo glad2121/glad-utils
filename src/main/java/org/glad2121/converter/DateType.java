@@ -28,8 +28,8 @@ class DateType extends ValueType {
         return new Date(millis);
     }
 
-    static Date toDate(Temporal o) {
-        return Date.from(InstantType.toInstant(o));
+    static Date toDate(Temporal temporal) {
+        return Date.from(InstantType.toInstant(temporal));
     }
 
     static Date toDate(String s) {

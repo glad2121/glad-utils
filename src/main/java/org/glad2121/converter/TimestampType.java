@@ -36,8 +36,8 @@ class TimestampType extends ValueType {
         return new Timestamp(date.getTime());
     }
 
-    static Timestamp toTimestamp(Temporal o) {
-        return Timestamp.from(InstantType.toInstant(o));
+    static Timestamp toTimestamp(Temporal temporal) {
+        return Timestamp.from(InstantType.toInstant(temporal));
     }
 
     static Timestamp toTimestamp(String s) {

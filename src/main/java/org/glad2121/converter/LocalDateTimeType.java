@@ -2,9 +2,10 @@ package org.glad2121.converter;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.util.Date;
+
+import org.glad2121.util.ClockHolder;
 
 /**
  * ローカル日時 ({@code LocalDateTime}) 型。
@@ -38,11 +39,11 @@ class LocalDateTimeType extends ValueType {
         if (o instanceof Date) {
             return toLocalDateTime((Date) o);
         }
-        return toLocalDateTime(o.toString());
+        return toLocalDateTime(String.valueOf(o));
     }
 
     /**
-     * エポックからのミリ秒数をシステムのデフォルトタイムゾーンのローカル日時に変換します。
+     * エポックからのミリ秒数をデフォルトタイムゾーンのローカル日時に変換します。
      *
      * @param millis ミリ秒数
      * @return 変換後の値
@@ -52,7 +53,7 @@ class LocalDateTimeType extends ValueType {
     }
 
     /**
-     * {@code Date} をシステムのデフォルトタイムゾーンのローカル日時に変換します。
+     * {@code Date} をデフォルトタイムゾーンのローカル日時に変換します。
      *
      * @param date {@code Date}
      * @return 変換後の値
@@ -78,13 +79,13 @@ class LocalDateTimeType extends ValueType {
     }
 
     /**
-     * 時点をシステムのデフォルトタイムゾーンのローカル日時に変換します。
+     * 時点をデフォルトタイムゾーンのローカル日時に変換します。
      *
      * @param instant 時点
      * @return 変換後の値
      */
     static LocalDateTime toLocalDateTime(Instant instant) {
-        return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+        return LocalDateTime.ofInstant(instant, ClockHolder.get().getZone());
     }
 
     /**

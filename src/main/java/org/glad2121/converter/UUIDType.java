@@ -28,7 +28,7 @@ class UUIDType extends ValueType {
         if (o instanceof UUID) {
             return (UUID) o;
         }
-        return toUUID(o.toString());
+        return toUUID(String.valueOf(o));
     }
 
     /**

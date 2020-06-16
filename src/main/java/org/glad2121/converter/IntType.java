@@ -40,7 +40,7 @@ class IntType extends ValueType {
         if (o instanceof Character) {
             return toInt((char) o);
         }
-        return toInt(o.toString());
+        return toInt(String.valueOf(o));
     }
 
     /**
@@ -64,7 +64,7 @@ class IntType extends ValueType {
      * @return 変換後の値
      */
     static int toInt(char c) {
-        return c & 0xFFFF;
+        return (int) c;
     }
 
     /**

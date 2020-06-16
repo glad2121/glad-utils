@@ -29,7 +29,7 @@ class BigDecimalType extends ValueType {
         if (o instanceof Number) {
             return toBigDecimal((Number) o);
         }
-        return toBigDecimal(o.toString());
+        return toBigDecimal(String.valueOf(o));
     }
 
     /**
@@ -42,19 +42,16 @@ class BigDecimalType extends ValueType {
         if (n instanceof BigDecimal) {
             return (BigDecimal) n;
         }
-        if (n instanceof Byte || n instanceof Short || n instanceof Integer) {
-            return new BigDecimal(n.intValue());
-        }
-        if (n instanceof Long) {
-            return new BigDecimal(n.longValue());
+        if (n instanceof Byte || n instanceof Short || n instanceof Integer || n instanceof Long) {
+            return BigDecimal.valueOf(n.longValue());
         }
         if (n instanceof Float || n instanceof Double) {
-            return new BigDecimal(n.doubleValue());
+            return BigDecimal.valueOf(n.doubleValue());
         }
         if (n instanceof BigInteger) {
             return new BigDecimal((BigInteger) n);
         }
-        return new BigDecimal(n.toString());
+        return toBigDecimal(String.valueOf(n));
     }
 
     /**

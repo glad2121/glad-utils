@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,8 +12,8 @@ import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.TimeZone;
 
+import org.glad2121.util.ClockHolder;
 import org.glad2121.util.DateTimeUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,17 +25,17 @@ import org.junit.jupiter.api.Test;
  */
 class ValueConverterTest {
 
-    TimeZone originalTimeZone;
+    Clock originalClock;
 
     @BeforeEach
     void setUp() throws Exception {
-        originalTimeZone = TimeZone.getDefault();
-        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Tokyo"));
+        originalClock = ClockHolder.get();
+        ClockHolder.setClock(Clock.system(DateTimeUtils.JST));
     }
 
     @AfterEach
     void tearDown() throws Exception {
-        TimeZone.setDefault(originalTimeZone);
+        ClockHolder.setClock(originalClock);
     }
 
     @Test

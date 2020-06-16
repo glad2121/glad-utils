@@ -28,7 +28,7 @@ class BigIntegerType extends ValueType {
         if (o instanceof Number) {
             return toBigInteger((Number) o);
         }
-        return toBigInteger(o.toString());
+        return toBigInteger(String.valueOf(o));
     }
 
     /**

@@ -22,7 +22,7 @@ class TimestampType extends ValueType {
         if (o instanceof Temporal) {
             return toTimestamp((Temporal) o);
         }
-        return toTimestamp(o.toString());
+        return toTimestamp(String.valueOf(o));
     }
 
     static Timestamp toTimestamp(long millis) {
@@ -41,6 +41,9 @@ class TimestampType extends ValueType {
     }
 
     static Timestamp toTimestamp(String s) {
+        if (s.indexOf('T') >= 0) {
+            return toTimestamp(InstantType.toInstant(s));
+        }
         return Timestamp.valueOf(s);
     }
 

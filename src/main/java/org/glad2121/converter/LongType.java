@@ -51,7 +51,7 @@ class LongType extends ValueType {
         if (o instanceof Temporal) {
             return toLong((Temporal) o);
         }
-        return toLong(o.toString());
+        return toLong(String.valueOf(o));
     }
 
     /**
@@ -63,7 +63,7 @@ class LongType extends ValueType {
      * @return 変換後の値
      */
     static long toLong(boolean b) {
-        return IntType.toInt(b);
+        return b ? 1L : 0L;
     }
 
     /**
@@ -75,7 +75,7 @@ class LongType extends ValueType {
      * @return {@code boolean}
      */
     static long toLong(char c) {
-        return IntType.toInt(c);
+        return (long) c;
     }
 
     /**

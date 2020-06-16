@@ -24,7 +24,7 @@ class ShortType extends ValueType {
         if (o instanceof Character) {
             return toShort((char) o);
         }
-        return toShort(o.toString());
+        return toShort(String.valueOf(o));
     }
 
     static short toShort(boolean b) {

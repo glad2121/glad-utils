@@ -21,7 +21,7 @@ class DateType extends ValueType {
         if (o instanceof Temporal) {
             return toDate((Temporal) o);
         }
-        return toDate(o.toString());
+        return toDate(String.valueOf(o));
     }
 
     static Date toDate(long millis) {

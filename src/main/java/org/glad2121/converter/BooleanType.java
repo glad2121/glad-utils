@@ -24,6 +24,10 @@ class BooleanType extends ValueType {
         map.put("no", false);
         map.put("on", true);
         map.put("off", false);
+        map.put("t", true);
+        map.put("f", false);
+        map.put("y", true);
+        map.put("n", false);
         map.put("1", true);
         map.put("0", false);
         STR_TO_BOOL = Collections.unmodifiableMap(map);
@@ -63,7 +67,7 @@ class BooleanType extends ValueType {
         if (o instanceof Number) {
             return toBoolean((Number) o);
         }
-        return toBoolean(o.toString());
+        return toBoolean(String.valueOf(o));
     }
 
     /**
@@ -94,7 +98,7 @@ class BooleanType extends ValueType {
      * @return 変換後の値
      */
     static boolean toBoolean(Number n) {
-        return n.doubleValue() != 0;
+        return LongType.toLong(n) != 0L;
     }
 
     /**

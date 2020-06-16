@@ -1,8 +1,10 @@
 package org.glad2121.converter;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.util.Date;
+
+import org.glad2121.util.ClockHolder;
 
 /**
  * 文字列型。
@@ -30,6 +32,9 @@ class StringType extends ValueType {
         if (o.getClass() == Date.class) {
             return toString((Date) o);
         }
+        if (o instanceof BigDecimal) {
+            return toString((BigDecimal) o);
+        }
         return o.toString();
     }
 
@@ -40,7 +45,17 @@ class StringType extends ValueType {
      * @return 変換後の値
      */
     static String toString(Date date) {
-        return OffsetDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()).toString();
+        return OffsetDateTime.ofInstant(date.toInstant(), ClockHolder.get().getZone()).toString();
+    }
+
+    /**
+     * {@code BigDecimal} を文字列に変換します。
+     *
+     * @param n {@code BigDecimal}
+     * @return 変換後の値
+     */
+    static String toString(BigDecimal n) {
+        return n.toPlainString();
     }
 
 }

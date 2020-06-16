@@ -2,10 +2,11 @@ package org.glad2121.converter;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.chrono.ChronoLocalDateTime;
 import java.time.temporal.Temporal;
 import java.util.Date;
+
+import org.glad2121.util.ClockHolder;
 
 /**
  * 時点 ({@code Instant}) 型。
@@ -39,7 +40,7 @@ public class InstantType extends ValueType {
         if (o instanceof Date) {
             return toInstant((Date) o);
         }
-        return toInstant(o.toString());
+        return toInstant(String.valueOf(o));
     }
 
     /**
@@ -79,13 +80,13 @@ public class InstantType extends ValueType {
     }
 
     /**
-     * システムのデフォルトタイムゾーンで、ローカル日時を時点に変換します。
+     * ローカル日時をデフォルトタイムゾーンで時点に変換します。
      *
      * @param dateTime ローカル日時
      * @return 変換後の値
      */
     static Instant toInstant(ChronoLocalDateTime<?> dateTime) {
-        return dateTime.atZone(ZoneId.systemDefault()).toInstant();
+        return dateTime.atZone(ClockHolder.get().getZone()).toInstant();
     }
 
     /**

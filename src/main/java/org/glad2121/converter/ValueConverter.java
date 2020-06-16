@@ -36,6 +36,8 @@ public class ValueConverter {
         Map<Class<?>, ValueType> map = new IdentityHashMap<>();
         map.put(boolean.class, new BooleanType(false));
         map.put(Boolean.class, new BooleanType(null));
+        map.put(char.class, new CharType('\0'));
+        map.put(Character.class, new CharType(null));
         map.put(byte.class, new ByteType((byte) 0));
         map.put(Byte.class, new ByteType(null));
         map.put(short.class, new ShortType((short) 0));
@@ -44,9 +46,9 @@ public class ValueConverter {
         map.put(Integer.class, new IntType(null));
         map.put(long.class, new LongType(0L));
         map.put(Long.class, new LongType(null));
-        map.put(float.class, new FloatType(0F));
+        map.put(float.class, new FloatType(0.0F));
         map.put(Float.class, new FloatType(null));
-        map.put(double.class, new DoubleType(0D));
+        map.put(double.class, new DoubleType(0.0));
         map.put(Double.class, new DoubleType(null));
         map.put(BigInteger.class, new BigIntegerType());
         map.put(BigDecimal.class, new BigDecimalType());
@@ -66,27 +68,6 @@ public class ValueConverter {
      * 使用しないコンストラクタ。
      */
     private ValueConverter() {
-    }
-
-    /**
-     * 指定されたデータ型の値型を返します。
-     *
-     * @param type データ型
-     * @return 値型
-     */
-    static ValueType valueType(Class<?> type) {
-        return VALUE_TYPE_MAP.getOrDefault(type, DEFAULT_VALUE_TYPE);
-    }
-
-    /**
-     * 指定されたデータ型のデフォルト値を返します。
-     *
-     * @param <T>  データ型
-     * @param type データ型
-     * @return デフォルト値
-     */
-    static <T> T defaultValue(Class<? extends T> type) {
-        return valueType(type).defaultValue();
     }
 
     /**
@@ -145,12 +126,23 @@ public class ValueConverter {
     }
 
     /**
+     * 指定されたデータ型のデフォルト値を返します。
+     *
+     * @param <T>  データ型
+     * @param type データ型
+     * @return デフォルト値
+     */
+    static <T> T defaultValue(Class<? extends T> type) {
+        return valueType(type).defaultValue();
+    }
+
+    /**
      * オブジェクトを指定されたデータ型に変換します。
      *
      * @param <T>  データ型
      * @param o    オブジェクト
      * @param type データ型
-     * @return
+     * @return 変換後の値
      */
     @SuppressWarnings("unchecked")
     static <T> T convert0(Object o, Class<? extends T> type) {
@@ -158,6 +150,16 @@ public class ValueConverter {
             return (T) o;
         }
         return valueType(type).convert(o);
+    }
+
+    /**
+     * 指定されたデータ型の値型を返します。
+     *
+     * @param type データ型
+     * @return 値型
+     */
+    static ValueType valueType(Class<?> type) {
+        return VALUE_TYPE_MAP.getOrDefault(type, DEFAULT_VALUE_TYPE);
     }
 
     /**

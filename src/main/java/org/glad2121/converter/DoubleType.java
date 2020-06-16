@@ -16,21 +16,7 @@ class DoubleType extends ValueType {
         if (o instanceof Number) {
             return toDouble((Number) o);
         }
-        if (o instanceof Boolean) {
-            return toDouble((boolean) o);
-        }
-        if (o instanceof Character) {
-            return toDouble((char) o);
-        }
-        return toDouble(o.toString());
-    }
-
-    static double toDouble(boolean b) {
-        return IntType.toInt(b);
-    }
-
-    static double toDouble(char c) {
-        return IntType.toInt(c);
+        return toDouble(String.valueOf(o));
     }
 
     static Double toDouble(Number n) {

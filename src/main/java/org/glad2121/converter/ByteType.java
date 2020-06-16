@@ -24,7 +24,7 @@ class ByteType extends ValueType {
         if (o instanceof Character) {
             return toByte((char) o);
         }
-        return toByte(o.toString());
+        return toByte(String.valueOf(o));
     }
 
     static byte toByte(boolean b) {
@@ -32,7 +32,7 @@ class ByteType extends ValueType {
     }
 
     static byte toByte(char c) {
-        if ((c & 0xFFFF) < 0x100) {
+        if ((c & 0xFF00) == 0) {
             return (byte) c;
         }
         throw new IllegalArgumentException(String.format("¥¥u%04X [%s]", c, c));

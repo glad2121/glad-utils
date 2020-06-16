@@ -16,21 +16,7 @@ class FloatType extends ValueType {
         if (o instanceof Number) {
             return toFloat((Number) o);
         }
-        if (o instanceof Boolean) {
-            return toFloat((boolean) o);
-        }
-        if (o instanceof Character) {
-            return toFloat((char) o);
-        }
-        return toFloat(o.toString());
-    }
-
-    static float toFloat(boolean b) {
-        return IntType.toInt(b);
-    }
-
-    static float toFloat(char c) {
-        return IntType.toInt(c);
+        return toFloat(String.valueOf(o));
     }
 
     static Float toFloat(Number n) {

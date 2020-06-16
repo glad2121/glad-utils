@@ -2,11 +2,12 @@ package org.glad2121.converter;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.chrono.ChronoLocalDateTime;
 import java.time.temporal.Temporal;
 import java.util.Date;
+
+import org.glad2121.util.ClockHolder;
 
 /**
  * オフセット付き日時 ({@code OffsetDateTime}) 型。
@@ -40,7 +41,7 @@ class OffsetDateTimeType extends ValueType {
         if (o instanceof Date) {
             return toOffsetDateTime((Date) o);
         }
-        return toOffsetDateTime(o.toString());
+        return toOffsetDateTime(String.valueOf(o));
     }
 
     /**
@@ -93,13 +94,13 @@ class OffsetDateTimeType extends ValueType {
     }
 
     /**
-     * ローカル日時をシステムのデフォルトタイムゾーンのオフセット付き日時に変換します。
+     * ローカル日時をデフォルトタイムゾーンのオフセット付き日時に変換します。
      *
      * @param dateTime ローカル日時
      * @return 変換後の値
      */
     static OffsetDateTime toOffsetDateTime(ChronoLocalDateTime<?> dateTime) {
-        return OffsetDateTime.from(dateTime.atZone(ZoneId.systemDefault()));
+        return OffsetDateTime.from(dateTime.atZone(ClockHolder.get().getZone()));
     }
 
     /**

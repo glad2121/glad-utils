@@ -1,11 +1,11 @@
-package org.glad2121.converter;
+package org.glad2121.util.value;
 
 /**
  * 値型の基底クラス。
  *
  * @author glad2121
  */
-abstract class ValueType {
+public abstract class ValueType {
 
     /**
      * デフォルト値。

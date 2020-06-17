@@ -1,4 +1,4 @@
-package org.glad2121.converter;
+package org.glad2121.util.value;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -19,7 +19,7 @@ import java.util.UUID;
  *
  * @author glad2121
  */
-class ValueTypes {
+public class ValueTypes {
 
     /**
      * デフォルトの値型。
@@ -75,7 +75,7 @@ class ValueTypes {
      * @param type データ型
      * @return 値型
      */
-    static ValueType valueType(Class<?> type) {
+    public static ValueType valueType(Class<?> type) {
         return VALUE_TYPE_MAP.getOrDefault(type, DEFAULT_VALUE_TYPE);
     }
 

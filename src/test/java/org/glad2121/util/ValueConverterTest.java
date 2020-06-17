@@ -1,4 +1,4 @@
-package org.glad2121.converter;
+package org.glad2121.util;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import org.glad2121.util.ClockHolder;
 import org.glad2121.util.DateTimeUtils;
+import org.glad2121.util.ValueConverter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,9 +43,6 @@ class ValueConverterTest {
     @Test
     @DisplayName("boolean への変換が正しく動作すること。")
     void testBoolean() {
-        // デフォルト値。
-        assertThat(ValueConverter.defaultValue(boolean.class)).isEqualTo(false);
-
         // null の変換。
         assertThat(ValueConverter.convert(null, boolean.class)).isEqualTo(false);
         assertThat(ValueConverter.convert(null, boolean.class, true)).isEqualTo(true);
@@ -88,9 +86,6 @@ class ValueConverterTest {
     @Test
     @DisplayName("Boolean への変換が正しく動作すること。")
     void testBooleanObj() {
-        // デフォルト値。
-        assertThat(ValueConverter.defaultValue(Boolean.class)).isNull();
-
         // null の変換。
         assertThat(ValueConverter.convert(null, Boolean.class)).isNull();
         assertThat(ValueConverter.convert(null, Boolean.class, true)).isEqualTo(true);
@@ -134,9 +129,6 @@ class ValueConverterTest {
     @Test
     @DisplayName("int への変換が正しく動作すること。")
     void testInt() {
-        // デフォルト値。
-        assertThat(ValueConverter.defaultValue(int.class)).isEqualTo(0);
-
         // null の変換。
         assertThat(ValueConverter.convert(null, int.class)).isEqualTo(0);
         assertThat(ValueConverter.convert(null, int.class, -1)).isEqualTo(-1);
@@ -179,9 +171,6 @@ class ValueConverterTest {
     @Test
     @DisplayName("Integer への変換が正しく動作すること。")
     void testInteger() {
-        // デフォルト値。
-        assertThat(ValueConverter.defaultValue(Integer.class)).isNull();
-
         // null の変換。
         assertThat(ValueConverter.convert(null, Integer.class)).isNull();
         assertThat(ValueConverter.convert(null, Integer.class, -1)).isEqualTo(-1);
@@ -224,9 +213,6 @@ class ValueConverterTest {
     @Test
     @DisplayName("long への変換が正しく動作すること。")
     void testLong() {
-        // デフォルト値。
-        assertThat(ValueConverter.defaultValue(long.class)).isEqualTo(0L);
-
         // null の変換。
         assertThat(ValueConverter.convert(null, long.class)).isEqualTo(0L);
         assertThat(ValueConverter.convert(null, long.class, -1L)).isEqualTo(-1L);
@@ -257,9 +243,6 @@ class ValueConverterTest {
     @Test
     @DisplayName("Long への変換が正しく動作すること。")
     void testLongObj() {
-        // デフォルト値。
-        assertThat(ValueConverter.defaultValue(Long.class)).isEqualTo(null);
-
         // null の変換。
         assertThat(ValueConverter.convert(null, Long.class)).isEqualTo(null);
         assertThat(ValueConverter.convert(null, Long.class, -1L)).isEqualTo(-1L);
@@ -294,8 +277,6 @@ class ValueConverterTest {
         OffsetDateTime odt = OffsetDateTime.parse("2020-01-12T12:23:34.123456+09:00");
         ZonedDateTime zdt = ZonedDateTime.of(odt.toLocalDateTime(), DateTimeUtils.JST);
 
-        assertThat(ValueConverter.defaultValue(Instant.class)).isNull();
-
         assertThat(ValueConverter.convert(null, Instant.class)).isNull();
         assertThat(ValueConverter.convert(null, Instant.class, now)).isSameAs(now);
 
@@ -321,8 +302,6 @@ class ValueConverterTest {
         OffsetDateTime odt = OffsetDateTime.parse("2020-01-12T12:23:34.123456+09:00");
         ZonedDateTime zdt = ZonedDateTime.of(odt.toLocalDateTime(), DateTimeUtils.JST);
 
-        assertThat(ValueConverter.defaultValue(OffsetDateTime.class)).isNull();
-
         assertThat(ValueConverter.convert(null, OffsetDateTime.class)).isNull();
         assertThat(ValueConverter.convert(null, OffsetDateTime.class, now)).isSameAs(now);
 
@@ -347,8 +326,6 @@ class ValueConverterTest {
     void testZonedDateTime() {
         ZonedDateTime now = ZonedDateTime.now();
         OffsetDateTime odt = OffsetDateTime.parse("2020-01-12T12:23:34.123456+09:00");
-
-        assertThat(ValueConverter.defaultValue(ZonedDateTime.class)).isNull();
 
         assertThat(ValueConverter.convert(null, ZonedDateTime.class)).isNull();
         assertThat(ValueConverter.convert(null, ZonedDateTime.class, now)).isSameAs(now);
@@ -376,8 +353,6 @@ class ValueConverterTest {
         OffsetDateTime odt = OffsetDateTime.parse("2020-01-12T12:23:34.123456+09:00");
         ZonedDateTime zdt = ZonedDateTime.of(odt.toLocalDateTime(), DateTimeUtils.JST);
 
-        assertThat(ValueConverter.defaultValue(LocalDateTime.class)).isNull();
-
         assertThat(ValueConverter.convert(null, LocalDateTime.class)).isNull();
         assertThat(ValueConverter.convert(null, LocalDateTime.class, now)).isSameAs(now);
 
@@ -404,8 +379,6 @@ class ValueConverterTest {
         OffsetDateTime odt = OffsetDateTime.parse("2020-01-12T12:23:34.123456+09:00");
         ZonedDateTime zdt = ZonedDateTime.of(odt.toLocalDateTime(), DateTimeUtils.JST);
 
-        assertThat(ValueConverter.defaultValue(LocalDate.class)).isNull();
-
         assertThat(ValueConverter.convert(null, LocalDate.class)).isNull();
         assertThat(ValueConverter.convert(null, LocalDate.class, now)).isSameAs(now);
 
@@ -430,9 +403,6 @@ class ValueConverterTest {
     @Test
     @DisplayName("String への変換が正しく動作すること。")
     void testString() {
-        // デフォルト値。
-        assertThat(ValueConverter.defaultValue(String.class)).isEqualTo(null);
-
         // null の変換。
         assertThat(ValueConverter.convert(null, String.class)).isEqualTo(null);
         assertThat(ValueConverter.convert(null, String.class, "")).isEqualTo("");

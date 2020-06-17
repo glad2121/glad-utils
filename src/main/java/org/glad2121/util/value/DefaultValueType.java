@@ -1,4 +1,4 @@
-package org.glad2121.converter;
+package org.glad2121.util.value;
 
 /**
  * デフォルトの値型。

@@ -1,4 +1,4 @@
-package org.glad2121.converter;
+package org.glad2121.util.value;
 
 import java.math.BigInteger;
 import java.time.temporal.Temporal;

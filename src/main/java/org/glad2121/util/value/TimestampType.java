@@ -1,4 +1,4 @@
-package org.glad2121.converter;
+package org.glad2121.util.value;
 
 import java.sql.Timestamp;
 import java.time.temporal.Temporal;

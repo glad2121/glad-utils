@@ -1,6 +1,8 @@
-package org.glad2121.converter;
+package org.glad2121.util;
 
 import java.util.Optional;
+
+import org.glad2121.util.value.ValueTypes;
 
 /**
  * 値のコンバータ。

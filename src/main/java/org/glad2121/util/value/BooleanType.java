@@ -1,4 +1,4 @@
-package org.glad2121.converter;
+package org.glad2121.util.value;
 
 import java.util.Collections;
 import java.util.HashMap;

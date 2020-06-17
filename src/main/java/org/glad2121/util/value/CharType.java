@@ -1,17 +1,36 @@
 package org.glad2121.util.value;
 
+/**
+ * 文字型。
+ *
+ * @author glad2121
+ */
 class CharType extends ValueType {
 
+    /**
+     * コンストラクタ。
+     *
+     * @param defaultValue デフォルト値
+     */
     public CharType(Character defaultValue) {
         super(defaultValue);
     }
 
+    /**
+     * オブジェクトを文字に変換します。
+     */
     @Override
     @SuppressWarnings("unchecked")
     public Character convert(Object o) {
         return toCharacter(o);
     }
 
+    /**
+     * オブジェクトを文字に変換します。
+     *
+     * @param o オブジェクト
+     * @return 変換後の値
+     */
     static Character toCharacter(Object o) {
         if (o instanceof Character) {
             return (Character) o;
@@ -25,10 +44,22 @@ class CharType extends ValueType {
         return toChar(o.toString());
     }
 
+    /**
+     * {@code boolean} を文字に変換します。
+     *
+     * @param b {@code boolean}
+     * @return 変換後の値
+     */
     static char toChar(boolean b) {
         return b ? 'T': 'F';
     }
 
+    /**
+     * 数値を文字に変換します。
+     *
+     * @param n 数値
+     * @return 変換後の値
+     */
     static char toChar(Number n) {
         if (n instanceof Byte || n instanceof Short) {
             return (char) n.shortValue();
@@ -42,6 +73,12 @@ class CharType extends ValueType {
         throw new IllegalArgumentException(String.valueOf(n));
     }
 
+    /**
+     * 文字列を文字に変換します。
+     *
+     * @param s 文字列
+     * @return 文字
+     */
     static char toChar(String s) {
         if (s.length() == 1) {
             return s.charAt(0);

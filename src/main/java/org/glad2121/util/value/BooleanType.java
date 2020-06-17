@@ -36,7 +36,7 @@ class BooleanType extends ValueType {
     /**
      * コンストラクタ。
      *
-     * @param defaultValue 初期値
+     * @param defaultValue デフォルト値
      */
     public BooleanType(Boolean defaultValue) {
         super(defaultValue);

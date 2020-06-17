@@ -98,7 +98,10 @@ class BooleanType extends ValueType {
      * @return 変換後の値
      */
     static boolean toBoolean(Number n) {
-        return LongType.toLong(n) != 0L;
+        if (n instanceof Byte || n instanceof Short || n instanceof Integer || n instanceof Long) {
+            return n.longValue() != 0L;
+        }
+        throw new IllegalArgumentException(String.valueOf(n));
     }
 
     /**

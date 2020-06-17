@@ -12,6 +12,7 @@ import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Optional;
 
 import org.glad2121.util.ClockHolder;
 import org.glad2121.util.DateTimeUtils;
@@ -48,9 +49,22 @@ class ValueConverterTest {
         assertThat(ValueConverter.convert(null, boolean.class)).isEqualTo(false);
         assertThat(ValueConverter.convert(null, boolean.class, true)).isEqualTo(true);
 
+        // boolean からの変換。
+        assertThat(ValueConverter.convert(false, boolean.class)).isEqualTo(false);
+        assertThat(ValueConverter.convert(true, boolean.class)).isEqualTo(true);
+
+        // 文字からの変換。
+        assertThat(ValueConverter.convert('T', boolean.class)).isEqualTo(true);
+        assertThat(ValueConverter.convert('y', boolean.class)).isEqualTo(true);
+        assertThat(ValueConverter.convert('1', boolean.class)).isEqualTo(true);
+        assertThat(ValueConverter.convert('F', boolean.class)).isEqualTo(false);
+        assertThat(ValueConverter.convert('0', boolean.class)).isEqualTo(false);
+
         // 数値からの変換。
         assertThat(ValueConverter.convert(0, boolean.class)).isEqualTo(false);
         assertThat(ValueConverter.convert(123, boolean.class)).isEqualTo(true);
+        assertThatThrownBy(() -> ValueConverter.convert(123.0, boolean.class))
+            .isInstanceOf(IllegalArgumentException.class);
 
         // 文字列からの変換。
         assertThat(ValueConverter.convert("TRUE", boolean.class)).isEqualTo(true);
@@ -61,6 +75,14 @@ class ValueConverterTest {
         assertThat(ValueConverter.convert("No", boolean.class)).isEqualTo(false);
         assertThat(ValueConverter.convert("off", boolean.class)).isEqualTo(false);
         assertThat(ValueConverter.convert("0", boolean.class)).isEqualTo(false);
+
+        // Optional からの変換。
+        assertThat(ValueConverter.convert(Optional.empty(), boolean.class)).isEqualTo(false);
+        assertThat(ValueConverter.convert(Optional.of("yes"), boolean.class)).isEqualTo(true);
+
+        // Optional への変換。
+        assertThat(ValueConverter.toOptional(null, boolean.class)).isEmpty();
+        assertThat(ValueConverter.toOptional(null, boolean.class).orElse(true)).isEqualTo(true);
     }
 
     @Test
@@ -73,9 +95,22 @@ class ValueConverterTest {
         assertThat(ValueConverter.convert(null, Boolean.class)).isNull();
         assertThat(ValueConverter.convert(null, Boolean.class, true)).isEqualTo(true);
 
+        // boolean からの変換。
+        assertThat(ValueConverter.convert(false, Boolean.class)).isEqualTo(false);
+        assertThat(ValueConverter.convert(true, Boolean.class)).isEqualTo(true);
+
+        // 文字からの変換。
+        assertThat(ValueConverter.convert('T', Boolean.class)).isEqualTo(true);
+        assertThat(ValueConverter.convert('y', Boolean.class)).isEqualTo(true);
+        assertThat(ValueConverter.convert('1', Boolean.class)).isEqualTo(true);
+        assertThat(ValueConverter.convert('F', Boolean.class)).isEqualTo(false);
+        assertThat(ValueConverter.convert('0', Boolean.class)).isEqualTo(false);
+
         // 数値からの変換。
         assertThat(ValueConverter.convert(0, Boolean.class)).isEqualTo(false);
         assertThat(ValueConverter.convert(123, Boolean.class)).isEqualTo(true);
+        assertThatThrownBy(() -> ValueConverter.convert(123.0, Boolean.class))
+            .isInstanceOf(IllegalArgumentException.class);
 
         // 文字列からの変換。
         assertThat(ValueConverter.convert("TRUE", Boolean.class)).isEqualTo(true);
@@ -86,6 +121,14 @@ class ValueConverterTest {
         assertThat(ValueConverter.convert("No", Boolean.class)).isEqualTo(false);
         assertThat(ValueConverter.convert("off", Boolean.class)).isEqualTo(false);
         assertThat(ValueConverter.convert("0", Boolean.class)).isEqualTo(false);
+
+        // Optional からの変換。
+        assertThat(ValueConverter.convert(Optional.empty(), Boolean.class)).isNull();
+        assertThat(ValueConverter.convert(Optional.of("yes"), Boolean.class)).isEqualTo(true);
+
+        // Optional への変換。
+        assertThat(ValueConverter.toOptional(null, Boolean.class)).isEmpty();
+        assertThat(ValueConverter.toOptional(null, Boolean.class).orElse(true)).isEqualTo(true);
     }
 
     @Test
@@ -97,6 +140,15 @@ class ValueConverterTest {
         // null の変換。
         assertThat(ValueConverter.convert(null, int.class)).isEqualTo(0);
         assertThat(ValueConverter.convert(null, int.class, -1)).isEqualTo(-1);
+
+        // boolean からの変換。
+        assertThat(ValueConverter.convert(false, int.class)).isEqualTo(0);
+        assertThat(ValueConverter.convert(true, int.class)).isEqualTo(1);
+
+        // 文字からの変換。
+        assertThat(ValueConverter.convert('\0', int.class)).isEqualTo(0);
+        assertThat(ValueConverter.convert('A', int.class)).isEqualTo(0x41);
+        assertThat(ValueConverter.convert('あ', int.class)).isEqualTo(0x3042);
 
         // 数値からの変換。
         assertThat(ValueConverter.convert(123, int.class)).isEqualTo(123);
@@ -114,6 +166,14 @@ class ValueConverterTest {
             .isInstanceOf(NumberFormatException.class);
         assertThatThrownBy(() -> ValueConverter.convert("123.4", int.class))
             .isInstanceOf(NumberFormatException.class);
+
+        // Optional からの変換。
+        assertThat(ValueConverter.convert(Optional.empty(), int.class)).isEqualTo(0);
+        assertThat(ValueConverter.convert(Optional.of("123"), int.class)).isEqualTo(123);
+
+        // Optional への変換。
+        assertThat(ValueConverter.toOptional(null, int.class)).isEmpty();
+        assertThat(ValueConverter.toOptional(null, int.class).orElse(-1)).isEqualTo(-1);
     }
 
     @Test
@@ -125,6 +185,15 @@ class ValueConverterTest {
         // null の変換。
         assertThat(ValueConverter.convert(null, Integer.class)).isNull();
         assertThat(ValueConverter.convert(null, Integer.class, -1)).isEqualTo(-1);
+
+        // boolean からの変換。
+        assertThat(ValueConverter.convert(false, Integer.class)).isEqualTo(0);
+        assertThat(ValueConverter.convert(true, Integer.class)).isEqualTo(1);
+
+        // 文字からの変換。
+        assertThat(ValueConverter.convert('\0', Integer.class)).isEqualTo(0);
+        assertThat(ValueConverter.convert('A', Integer.class)).isEqualTo(0x41);
+        assertThat(ValueConverter.convert('あ', Integer.class)).isEqualTo(0x3042);
 
         // 数値からの変換。
         assertThat(ValueConverter.convert(123, Integer.class)).isEqualTo(123);
@@ -142,6 +211,14 @@ class ValueConverterTest {
             .isInstanceOf(NumberFormatException.class);
         assertThatThrownBy(() -> ValueConverter.convert("123.4", Integer.class))
             .isInstanceOf(NumberFormatException.class);
+
+        // Optional からの変換。
+        assertThat(ValueConverter.convert(Optional.empty(), Integer.class)).isNull();
+        assertThat(ValueConverter.convert(Optional.of("123"), Integer.class)).isEqualTo(123);
+
+        // Optional への変換。
+        assertThat(ValueConverter.toOptional(null, Integer.class)).isEmpty();
+        assertThat(ValueConverter.toOptional(null, Integer.class).orElse(-1)).isEqualTo(-1);
     }
 
     @Test

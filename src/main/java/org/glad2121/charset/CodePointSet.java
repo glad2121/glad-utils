@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.IntPredicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,14 +34,14 @@ class CodePointSet {
     /**
      * コードポイントとコード区分の対応表。
      */
-    final Map<Integer, CodeType> map;
+    final Map<Integer, Integer> map;
 
     /**
      * コンストラクタ。
      *
      * @param map コードポイントとコード区分の対応表。
      */
-    CodePointSet(Map<Integer, CodeType> map) {
+    CodePointSet(Map<Integer, Integer> map) {
         this.map = Collections.unmodifiableMap(map);
     }
 
@@ -50,7 +51,7 @@ class CodePointSet {
      * @param codePoint コードポイント
      * @return コード区分
      */
-    public CodeType codeType(int codePoint) {
+    public Integer codeType(int codePoint) {
         return map.get(codePoint);
     }
 
@@ -68,19 +69,12 @@ class CodePointSet {
      * 指定されたコードポイントがコード区分に含まれるか判定します。
      *
      * @param codePoint コードポイント
-     * @param types コード区分
+     * @param pred コード区分
      * @return コード区分に含まれれば {@code true}
      */
-    public boolean contains(int codePoint, CodeType... types) {
-        CodeType ct = codeType(codePoint);
-        if (ct != null) {
-            for (CodeType type : types) {
-                if (ct.equals(type)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    public boolean contains(int codePoint, IntPredicate pred) {
+        Integer ct = codeType(codePoint);
+        return (ct != null) && pred.test(ct);
     }
 
     /**
@@ -100,25 +94,25 @@ class CodePointSet {
      * 文字列を構成する文字がすべてコード区分に含まれるか判定します。
      *
      * @param s 文字列
-     * @param types コード区分
+     * @param pred コード区分
      * @return すべてコード区分に含まれれば {@code true}
      */
-    public boolean containsAll(CharSequence s, CodeType... types) {
+    public boolean containsAll(CharSequence s, IntPredicate pred) {
         if (StringUtils.isEmpty(s)) {
             return true;
         }
-        return s.codePoints().allMatch(cp -> contains(cp, types));
+        return s.codePoints().allMatch(cp -> contains(cp, pred));
     }
 
     /**
      * 指定されたコード区分のコードポイントの個数を返します。
      *
-     * @param type コード区分
+     * @param pred コード区分
      * @return コードポイントの個数
      */
-    int count(CodeType type) {
+    int count(IntPredicate pred) {
         return (int) map.entrySet().stream()
-            .filter(entry -> entry.getValue() == type)
+            .filter(entry -> pred.test(entry.getValue()))
             .count();
     }
 
@@ -133,16 +127,16 @@ class CodePointSet {
             if (in == null) {
                 throw new RuntimeException("Resource not found: " + name);
             }
-            Map<Integer, CodeType> map = new HashMap<>();
+            Map<Integer, Integer> map = new HashMap<>();
             Pattern p = Pattern.compile(
-                    "(\\d),\\\\u([0-9A-F]+)(?:-\\\\u([0-9A-F]+)|\\\\u([0-9A-F]+))?");
+                    "(\\d{2}),\\\\u([0-9A-F]+)(?:-\\\\u([0-9A-F]+)|\\\\u([0-9A-F]+))?");
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(in, StandardCharsets.UTF_8));
             String line;
             while ((line = reader.readLine()) != null) {
                 Matcher m = p.matcher(line);
                 if (m.matches()) {
-                    CodeType type = CodeType.values()[Integer.parseInt(m.group(1))];
+                    int type = Integer.parseInt(m.group(1), 16);
                     int first = Integer.parseInt(m.group(2), 16);
                     if (m.group(4) != null) {
                         // サロゲートペア。
@@ -164,6 +158,110 @@ class CodePointSet {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 11: ASCII (制御文字を除く)。
+     */
+    static boolean isAscii(int codeType) {
+        return codeType == 0x11;
+    }
+
+    /**
+     * 2x: JIS X 0201 (ASCII との重複を除く)。
+     */
+    static boolean isJisX0201Ext(int codeType) {
+        return (codeType & 0xF0) == 0x20;
+    }
+
+    /**
+     * 1x-2x: JIS X 0201 (ASCII を含む)。
+     */
+    static boolean isJisX0201(int codeType) {
+        int ct1 = codeType & 0xF0;
+        return (0x10 <= ct1) && (ct1 <= 0x20);
+    }
+
+    /**
+     * 3x: JIS X 0208 (非漢字、第1水準漢字、第2水準漢字)。
+     */
+    static boolean isJisX0208(int codeType) {
+        return (codeType & 0xF0) == 0x30;
+    }
+
+    /**
+     * 4x: JIS X 0213 1面 (JIS X 0208 との重複を除く)。
+     */
+    static boolean isJisX0213P1Ext(int codeType) {
+        return (codeType & 0xF0) == 0x40;
+    }
+
+    /**
+     * 3x-4x: JIS X 0213 1面 (JIS X 0208 を含む)。
+     */
+    static boolean isJisX0213P1(int codeType) {
+        int ct1 = codeType & 0xF0;
+        return (0x30 <= ct1) && (ct1 <= 0x40);
+    }
+
+    /**
+     * 5x: JIS X 0213 2面。
+     */
+    static boolean isJisX0213P2(int codeType) {
+        return (codeType & 0xF0) == 0x50;
+    }
+
+    /**
+     * 3x-5x: JIS X 0213。
+     */
+    static boolean isJisX0213(int codeType) {
+        int ct1 = codeType & 0xF0;
+        return (0x30 <= ct1) && (ct1 <= 0x50);
+    }
+
+    /**
+     * x3: NEC特殊文字。
+     */
+    static boolean isNecSpecialChar(int codeType) {
+        return (codeType & 0x0F) == 0x03;
+    }
+
+    /**
+     * x4: IBM拡張文字。
+     */
+    static boolean isIbmExt(int codeType) {
+        return (codeType & 0x0F) == 0x04;
+    }
+
+    /**
+     * 1x-3x: JIS1990。
+     */
+    static boolean isJis1990(int codeType) {
+        int ct1 = codeType & 0xF0;
+        return (0x10 <= ct1) && (ct1 <= 0x30);
+    }
+
+    /**
+     * 1x-5x: JIS2004。
+     */
+    static boolean isJis2004(int codeType) {
+        int ct1 = codeType & 0xF0;
+        return (0x10 <= ct1) && (ct1 <= 0x50);
+    }
+
+    /**
+     * x1: BasicJ
+     */
+    static boolean isBasicJ(int codeType) {
+        return (codeType & 0x0F) == 0x01;
+    }
+
+    /**
+     * x2-x4: CommonJ
+     */
+    static boolean isCommonJ(int codeType) {
+        int ct2 = codeType & 0x0F;
+        return (0x01 <= ct2) && (ct2 <= 0x04);
     }
 
     /**

@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import org.glad2121.charset.CodePointSet.CodeType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,23 +27,21 @@ class CodePointSetTest {
     @Test
     @DisplayName("コードポイントの個数のチェック。")
     void testCount() {
-        // 制御文字33字は利用可能文字に含めない。
-        assertThat(CodePointSet.INSTANCE.count(CodeType.UNKNOWN)).isEqualTo(0);
         // US-ASCII 128字から、制御文字33字を除いたもの。
-        assertThat(CodePointSet.INSTANCE.count(CodeType.US_ASCII)).isEqualTo(95);
+        assertThat(CodePointSet.INSTANCE.count(CodePointSet::isAscii)).isEqualTo(95);
         // 半角カナ63字と、円記号、上線。
-        assertThat(CodePointSet.INSTANCE.count(CodeType.JIS_X_0201)).isEqualTo(65);
+        assertThat(CodePointSet.INSTANCE.count(CodePointSet::isJisX0201Ext)).isEqualTo(65);
         // JIS X 0208-1990 6879字と、Windows-31J とマッピングが異なる7字。
-        assertThat(CodePointSet.INSTANCE.count(CodeType.JIS_X_0208)).isEqualTo(6886);
+        assertThat(CodePointSet.INSTANCE.count(CodePointSet::isJisX0208)).isEqualTo(6886);
         // NEC特殊文字83字から、JIS X 0208 との重複9字を除いたもの。
-        assertThat(CodePointSet.INSTANCE.count(CodeType.NEC_SPECIAL_CHAR)).isEqualTo(74);
+        assertThat(CodePointSet.INSTANCE.count(CodePointSet::isNecSpecialChar)).isEqualTo(74);
         // IBM拡張漢字388字から、JIS X 0208、NEC特殊文字との重複15字を除いたもの。
-        assertThat(CodePointSet.INSTANCE.count(CodeType.IBM_EXT)).isEqualTo(373);
+        assertThat(CodePointSet.INSTANCE.count(CodePointSet::isIbmExt)).isEqualTo(373);
         // JIS X 0213:2004 第3水準漢字1259字、追加非漢字659字から、
         // Windows-31J との重複275字、結合文字列25字を除き、結合文字2字を追加したもの。
-        assertThat(CodePointSet.INSTANCE.count(CodeType.JIS_X_0213_3)).isEqualTo(1620);
+        assertThat(CodePointSet.INSTANCE.count(CodePointSet::isJisX0213P1Ext)).isEqualTo(1620);
         // JIS X 0213:2004 第4水準漢字2436字から、Windows-31J との重複89字を除いたもの。
-        assertThat(CodePointSet.INSTANCE.count(CodeType.JIS_X_0213_4)).isEqualTo(2347);
+        assertThat(CodePointSet.INSTANCE.count(CodePointSet::isJisX0213P2)).isEqualTo(2347);
     }
 
     @Test
@@ -53,7 +50,7 @@ class CodePointSetTest {
         CodePointSet source = new CharsetFileConverter()
                 .loadFromCharsetText(CharsetFileConverter.SOURCE_NAME);
         CodePointSet target = CodePointSet.INSTANCE;
-        Map<Integer, CodeType> diff = source.map.entrySet().stream()
+        Map<Integer, Integer> diff = source.map.entrySet().stream()
                 .filter(entry -> target.map.get(entry.getKey()) != entry.getValue())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         if (!diff.isEmpty()) {

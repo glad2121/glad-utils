@@ -11,7 +11,6 @@ import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.regex.Pattern;
 
-import org.glad2121.charset.CodePointSet.CodeType;
 import org.glad2121.util.StringUtils;
 
 /**
@@ -356,8 +355,7 @@ public final class CharsetUtils {
      * @return JIS X 0201 ならば {@code true}
      */
     static boolean isJisX0201(int codePoint) {
-        return CodePointSet.INSTANCE.contains(codePoint,
-                CodeType.US_ASCII, CodeType.JIS_X_0201);
+        return CodePointSet.INSTANCE.contains(codePoint, CodePointSet::isJisX0201);
     }
 
     /**
@@ -551,8 +549,7 @@ public final class CharsetUtils {
      * @return JIS 1990 ならば {@code true}
      */
     static boolean isJis1990(int codePoint) {
-        return CodePointSet.INSTANCE.contains(codePoint,
-                CodeType.US_ASCII, CodeType.JIS_X_0201, CodeType.JIS_X_0208);
+        return CodePointSet.INSTANCE.contains(codePoint, CodePointSet::isJis1990);
     }
 
     /**
@@ -583,11 +580,7 @@ public final class CharsetUtils {
      * @return JIS 2004 ならば {@code true}
      */
     static boolean isJis2004(int codePoint) {
-        CodeType type = CodePointSet.INSTANCE.codeType(codePoint);
-        return (type != null)
-                && (type.compareTo(CodeType.JIS_X_0208) <= 0
-                || CodeType.JIS_X_0213_3.compareTo(type) <= 0
-                || NON_JIS_2004.indexOf(codePoint) < 0);
+        return CodePointSet.INSTANCE.contains(codePoint, CodePointSet::isJis2004);
     }
 
     /**
@@ -616,12 +609,7 @@ public final class CharsetUtils {
      * @return 基本日本文字集合ならば {@code true}
      */
     static boolean isBasicJ(int codePoint) {
-        return CodePointSet.INSTANCE.contains(codePoint,
-                CodeType.US_ASCII, CodeType.JIS_X_0208)
-                && !isFullwidthAscii(codePoint)
-                && codePoint != 0x2015
-                && codePoint != 0x2225
-                && !(0xFFE0 <= codePoint && codePoint <= 0xFFE2);
+        return CodePointSet.INSTANCE.contains(codePoint, CodePointSet::isBasicJ);
     }
 
     /**
@@ -653,9 +641,7 @@ public final class CharsetUtils {
      * @return 通用日本文字集合ならば {@code true}
      */
     static boolean isCommonJ(int codePoint) {
-        return CodePointSet.INSTANCE.contains(codePoint,
-                CodeType.US_ASCII, CodeType.JIS_X_0201,
-                CodeType.JIS_X_0208, CodeType.NEC_SPECIAL_CHAR, CodeType.IBM_EXT);
+        return CodePointSet.INSTANCE.contains(codePoint, CodePointSet::isCommonJ);
     }
 
     /**

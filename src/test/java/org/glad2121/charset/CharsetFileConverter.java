@@ -20,8 +20,6 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.glad2121.charset.CodePointSet.CodeType;
-
 /**
  * 文字集合の設定ファイルをコンパクト化するコンバータ。
  *
@@ -57,14 +55,13 @@ class CharsetFileConverter {
     void convert() {
         CodePointSet set = loadFromCharsetText(SOURCE_NAME);
 
-        assertThat(set.count(CodeType.UNKNOWN)).isEqualTo(0);
-        assertThat(set.count(CodeType.US_ASCII)).isEqualTo(95);
-        assertThat(set.count(CodeType.JIS_X_0201)).isEqualTo(65);
-        assertThat(set.count(CodeType.JIS_X_0208)).isEqualTo(6886);
-        assertThat(set.count(CodeType.NEC_SPECIAL_CHAR)).isEqualTo(74);
-        assertThat(set.count(CodeType.IBM_EXT)).isEqualTo(373);
-        assertThat(set.count(CodeType.JIS_X_0213_3)).isEqualTo(1620);
-        assertThat(set.count(CodeType.JIS_X_0213_4)).isEqualTo(2347);
+        assertThat(set.count(CodePointSet::isAscii)).isEqualTo(95);
+        assertThat(set.count(CodePointSet::isJisX0201Ext)).isEqualTo(65);
+        assertThat(set.count(CodePointSet::isJisX0208)).isEqualTo(6879);
+        assertThat(set.count(CodePointSet::isNecSpecialChar)).isEqualTo(74);
+        assertThat(set.count(CodePointSet::isIbmExt)).isEqualTo(373);
+        assertThat(set.count(CodePointSet::isJisX0213P1Ext)).isEqualTo(1918 - 25);
+        assertThat(set.count(CodePointSet::isJisX0213P2)).isEqualTo(2436);
 
         Path path = Paths.get(RESOURCE_PATH,
                 getClass().getPackageName().replace('.', '/'), TARGET_NAME);
@@ -83,28 +80,24 @@ class CharsetFileConverter {
                 throw new RuntimeException("Resource not found: " + name);
             }
             Map<String, Integer> count = new TreeMap<>();
-            Map<Integer, CodeType> map = new TreeMap<>();
-            Pattern p = Pattern.compile("(?:U\\+([0-9A-F]+)|-)\\s*,(\\d),(\\d{6}),.*");
+            Map<Integer, Integer> map = new TreeMap<>();
+            Pattern p = Pattern.compile("([0-9A-F]{4})([0-9A-F]{4})?\\s*,(\\d{2}),(\\d{6}),.*");
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(in, StandardCharsets.UTF_8));
             String line;
             while ((line = reader.readLine()) != null) {
                 Matcher m = p.matcher(line);
                 if (m.matches()) {
-                    String code = m.group(1);
-                    String detail = m.group(3).replaceFirst("[1-7]$", "x");
-                    String prefix = (code == null) ? "-" :
-                        detail.endsWith("x") ? "x" : code.substring(0, 1);
-                    String key = m.group(2)
-                            + ',' + detail.substring(4) + detail.substring(2, 4)
-                            + ',' + detail + ',' + prefix;
+                    String key = m.group(3);
                     count.put(key, count.getOrDefault(key, 0) + 1);
-                    if (m.group(1) != null) {
-                        int codePoint = Integer.parseInt(m.group(1), 16);
-                        int type = Integer.parseInt(m.group(2));
-                        if (0 < type && type < 9) {
-                            map.put(codePoint, CodeType.values()[type]);
-                        }
+
+                    int c = Integer.parseInt(m.group(1), 16);
+                    int type = Integer.parseInt(m.group(3), 16);
+                    if (m.group(2) == null) {
+                        map.put(c, type);
+                    } else if (Character.isHighSurrogate((char) c)) {
+                        int low = Integer.parseInt(m.group(2), 16);
+                        map.put(Character.toCodePoint((char) c, (char) low), type);
                     }
                 }
             }
@@ -132,7 +125,7 @@ class CharsetFileConverter {
             writer.print("#\n");
             writer.print("# コードポイントとコード区分の対応。\n");
             writer.print("#\n");
-            CodeType type = null;
+            Integer type = null;
             int prev = -1;
             int first = -1;
             int last = -1;
@@ -164,7 +157,7 @@ class CharsetFileConverter {
      * @param first 最初のコードポイント
      * @param last  最後のコードポイント
      */
-    void printLine(PrintWriter writer, CodeType type, int prev, int first, int last) {
+    void printLine(PrintWriter writer, Integer type, int prev, int first, int last) {
         if (type == null) {
             return;
         }
@@ -184,10 +177,10 @@ class CharsetFileConverter {
             }
             if (first == last) {
                 // 単独のコードポイント。
-                writer.printf("%d,\\u%04X\n", type.ordinal(), first);
+                writer.printf("%02X,\\u%04X\n", type, first);
             } else {
                 // コードポイントの範囲。
-                writer.printf("%d,\\u%04X-\\u%04X\n", type.ordinal(), first, last);
+                writer.printf("%02X,\\u%04X-\\u%04X\n", type, first, last);
             }
         } else {
             if (prev < 0x10000) {
@@ -198,7 +191,7 @@ class CharsetFileConverter {
             // サロゲートペア。
             int hi = Character.highSurrogate(first);
             int lo = Character.lowSurrogate(first);
-            writer.printf("%d,\\u%04X\\u%04X\n", type.ordinal(), hi, lo);
+            writer.printf("%02X,\\u%04X\\u%04X\n", type, hi, lo);
         }
     }
 

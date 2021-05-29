@@ -355,7 +355,7 @@ public final class CharsetUtils {
      * @return JIS X 0201 ならば {@code true}
      */
     static boolean isJisX0201(int codePoint) {
-        return CodePointSet.INSTANCE.contains(codePoint, CodePointSet::isJisX0201);
+        return CodePointSet.INSTANCE.matches(codePoint, CharType::isJisX0201);
     }
 
     /**
@@ -549,7 +549,7 @@ public final class CharsetUtils {
      * @return JIS 1990 ならば {@code true}
      */
     static boolean isJis1990(int codePoint) {
-        return CodePointSet.INSTANCE.contains(codePoint, CodePointSet::isJis1990);
+        return CodePointSet.INSTANCE.matches(codePoint, CharType::isJis1990);
     }
 
     /**
@@ -580,7 +580,7 @@ public final class CharsetUtils {
      * @return JIS 2004 ならば {@code true}
      */
     static boolean isJis2004(int codePoint) {
-        return CodePointSet.INSTANCE.contains(codePoint, CodePointSet::isJis2004);
+        return CodePointSet.INSTANCE.matches(codePoint, CharType::isJis2004);
     }
 
     /**
@@ -609,7 +609,7 @@ public final class CharsetUtils {
      * @return 基本日本文字集合ならば {@code true}
      */
     static boolean isBasicJ(int codePoint) {
-        return CodePointSet.INSTANCE.contains(codePoint, CodePointSet::isBasicJ);
+        return CodePointSet.INSTANCE.matches(codePoint, CharType::isBasicJ);
     }
 
     /**
@@ -641,7 +641,7 @@ public final class CharsetUtils {
      * @return 通用日本文字集合ならば {@code true}
      */
     static boolean isCommonJ(int codePoint) {
-        return CodePointSet.INSTANCE.contains(codePoint, CodePointSet::isCommonJ);
+        return CodePointSet.INSTANCE.matches(codePoint, CharType::isCommonJ);
     }
 
     /**

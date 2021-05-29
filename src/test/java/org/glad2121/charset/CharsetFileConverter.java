@@ -55,13 +55,13 @@ class CharsetFileConverter {
     void convert() {
         CodePointSet set = loadFromCharsetText(SOURCE_NAME);
 
-        assertThat(set.count(CodePointSet::isAscii)).isEqualTo(95);
-        assertThat(set.count(CodePointSet::isJisX0201Ext)).isEqualTo(65);
-        assertThat(set.count(CodePointSet::isJisX0208)).isEqualTo(6879);
-        assertThat(set.count(CodePointSet::isNecSpecialChar)).isEqualTo(74);
-        assertThat(set.count(CodePointSet::isIbmExt)).isEqualTo(373);
-        assertThat(set.count(CodePointSet::isJisX0213P1Ext)).isEqualTo(1918 - 25);
-        assertThat(set.count(CodePointSet::isJisX0213P2)).isEqualTo(2436);
+        assertThat(set.count(CharType::isAscii)).isEqualTo(95);
+        assertThat(set.count(CharType::isJisX0201Ext)).isEqualTo(65);
+        assertThat(set.count(CharType::isJisX0208)).isEqualTo(6879);
+        assertThat(set.count(CharType::isNecSpecialChar)).isEqualTo(74);
+        assertThat(set.count(CharType::isIbmExt)).isEqualTo(373);
+        assertThat(set.count(CharType::isJisX0213P1Ext)).isEqualTo(1918 - 25);
+        assertThat(set.count(CharType::isJisX0213P2)).isEqualTo(2436);
 
         Path path = Paths.get(RESOURCE_PATH,
                 getClass().getPackageName().replace('.', '/'), TARGET_NAME);
@@ -80,7 +80,7 @@ class CharsetFileConverter {
                 throw new RuntimeException("Resource not found: " + name);
             }
             Map<String, Integer> count = new TreeMap<>();
-            Map<Integer, Integer> map = new TreeMap<>();
+            Map<Integer, CharType> map = new TreeMap<>();
             Pattern p = Pattern.compile("([0-9A-F]{4})([0-9A-F]{4})?\\s*,(\\d{2}),(\\d{6}),.*");
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(in, StandardCharsets.UTF_8));
@@ -92,7 +92,7 @@ class CharsetFileConverter {
                     count.put(key, count.getOrDefault(key, 0) + 1);
 
                     int c = Integer.parseInt(m.group(1), 16);
-                    int type = Integer.parseInt(m.group(3), 16);
+                    CharType type = CharType.getOrCreate(Integer.parseInt(m.group(3), 16));
                     if (m.group(2) == null) {
                         map.put(c, type);
                     } else if (Character.isHighSurrogate((char) c)) {
@@ -125,13 +125,13 @@ class CharsetFileConverter {
             writer.print("#\n");
             writer.print("# コードポイントとコード区分の対応。\n");
             writer.print("#\n");
-            Integer type = null;
+            CharType type = CharType.UNDEFINED;
             int prev = -1;
             int first = -1;
             int last = -1;
             for (var entry : set.map.entrySet()) {
                 int codePoint = entry.getKey();
-                if (entry.getValue() != type
+                if (!type.equals(entry.getValue())
                         || codePoint >= 0x10000
                         || codePoint != last + 1) {
                     printLine(writer, type, prev, first, last);
@@ -157,8 +157,8 @@ class CharsetFileConverter {
      * @param first 最初のコードポイント
      * @param last  最後のコードポイント
      */
-    void printLine(PrintWriter writer, Integer type, int prev, int first, int last) {
-        if (type == null) {
+    void printLine(PrintWriter writer, CharType type, int prev, int first, int last) {
+        if (CharType.UNDEFINED.equals(type)) {
             return;
         }
         if (first < 0x10000) {
@@ -177,10 +177,10 @@ class CharsetFileConverter {
             }
             if (first == last) {
                 // 単独のコードポイント。
-                writer.printf("%02X,\\u%04X\n", type, first);
+                writer.printf("%s,\\u%04X\n", type, first);
             } else {
                 // コードポイントの範囲。
-                writer.printf("%02X,\\u%04X-\\u%04X\n", type, first, last);
+                writer.printf("%s,\\u%04X-\\u%04X\n", type, first, last);
             }
         } else {
             if (prev < 0x10000) {
@@ -191,7 +191,7 @@ class CharsetFileConverter {
             // サロゲートペア。
             int hi = Character.highSurrogate(first);
             int lo = Character.lowSurrogate(first);
-            writer.printf("%02X,\\u%04X\\u%04X\n", type, hi, lo);
+            writer.printf("%s,\\u%04X\\u%04X\n", type, hi, lo);
         }
     }
 
